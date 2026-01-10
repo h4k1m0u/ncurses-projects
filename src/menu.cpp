@@ -3,18 +3,20 @@
 
 using namespace Constants;
 
-Menu::Menu():
+Menu::Menu(int rows, int cols):
+  m_rows(rows),
+  m_cols(cols),
   m_i_selected(0)
 {
 }
 
-WINDOW* Menu::create_window(int rows, int cols) {
+WINDOW* Menu::create_window() {
   // new window that doesn't cover all terminal (coords start from 0)
   size_t width_menu = get_menu_width();
   int rows_menu = N_MENU_ITEMS + 2*BORDER_THICKNESS + 2*PADDING_Y;
   int cols_menu = width_menu + 2*BORDER_THICKNESS + 2*PADDING_X;
-  int x_menu = rows / 2 - rows_menu / 2;
-  int y_menu = cols / 2 - cols_menu / 2;
+  int x_menu = m_rows / 2 - rows_menu / 2;
+  int y_menu = m_cols / 2 - cols_menu / 2;
   WINDOW* win = newwin(rows_menu, cols_menu, x_menu, y_menu);
 
   return win;

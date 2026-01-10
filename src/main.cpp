@@ -2,12 +2,16 @@
 
 #include "constants.hpp"
 #include "menu.hpp"
+#include "frame.hpp"
 
 using namespace Constants;
 
 size_t i_selected = 0;
 
 int main() {
+  // set locale to utf-8 to support unicode characters to print frame border (otherwise prints gibberish)
+  setlocale(LC_ALL, "");
+
   // initialize ncurses
   initscr();
 
@@ -20,12 +24,16 @@ int main() {
   // # of lines & cols for entire terminal
   int rows, cols;
   getmaxyx(stdscr, rows, cols);
-  printf("# lines: %d, # cols: %d\n", rows, cols);
+  // printf("# lines: %d, # cols: %d\n", rows, cols);
+
+  // frame borders surround terminal
+  Frame frame(rows, cols);
+  WINDOW* window_frame = frame.create_window();
 
   // separate menu window that doesn't cover all terminal,
   // so it can be h/v centered
-  Menu menu;
-  WINDOW* window_menu = menu.create_window(rows, cols);
+  Menu menu(rows, cols);
+  WINDOW* window_menu = menu.create_window();
 
   // get typed character (by getch()) without waiting for '\n'
   cbreak();
@@ -40,18 +48,16 @@ int main() {
   // sets the cursor state to invisible
   curs_set(0);
 
-  // draw borders around window
+  // draw frame borders
+  frame.draw(window_frame);
+
+  // draw borders around menu window
   menu.draw_border(window_menu);
 
   int c = 0;
 
   while (c != 'q' && c != 'Q' && !(menu.is_selected(I_LAST) && c == '\n')) {
     menu.draw_items(window_menu);
-
-    ///
-    mvaddch(0, 0, ACS_CKBOARD);
-    refresh();
-    ///
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);
@@ -63,6 +69,7 @@ int main() {
       menu.navigate_down();
   }
 
+  delwin(window_frame);
   delwin(window_menu);
   endwin();
 

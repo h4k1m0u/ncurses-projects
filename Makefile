@@ -9,7 +9,8 @@ DEPS_FILES := $(OBJECTS_FILES:.o=.d)
 
 CPPFLAGS := -I$(INCLUDE_DIR)
 CXXFLAGS := -std=c++20 -Wall -Wextra -Werror -MMD
-LDFLAGS := -lncurses
+# LDFLAGS := -lncurses
+LDFLAGS := -lncursesw
 
 $(BUILD_DIR)/main: $(OBJECTS_FILES)
 	$(CXX) $^ -o$@ $(LDFLAGS)
