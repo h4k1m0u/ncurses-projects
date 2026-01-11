@@ -18,27 +18,34 @@ def join_rgb(r: int, g: int, b: int) -> str:
 
     return color
 
-def calculate_shades(color: str, n_shades: int, factor: float) -> list:
-    """Calculate `n_shades` darkened shades of input `color` (adding black)"""
-    r, g, b = split_rgb(color)
+def darken(channel, factor):
+    """ Resulting color becomes darker """
+    return int(channel * factor)
 
-    for _ in range(n_shades):
-        r = int(r * factor)
-        g = int(g * factor)
-        b = int(b * factor)
-        color_shade = join_rgb(r, g, b)
-        print(f'color_shade: {color_shade}')
+def lighten(channel, factor):
+    """ Resulting color becomes lighter """
+    return int(channel + (255 - channel) * factor)
 
-def calculate_tints(color: str, n_tints: int, factor: float) -> list:
-    """Calculate `n_tints` lightend shades of input `color` (adding white)"""
-    r, g, b = split_rgb(color)
+def calculate_shades(color_rgb: tuple, n: int, factor: float, f) -> list[str]:
+    """
+    Calculate `n` shades of input `color` by applying given function
+    Accord. to function f(), the shades are in ASC. order of darkness (shades) or brightness (tints)
+    """
+    shades = []
+    r, g, b = color_rgb
 
-    for _ in range(n_tints):
-        r = int(r + (255 - r) * factor)
-        g = int(g + (255 - g) * factor)
-        b = int(b + (255 - b) * factor)
-        color_shade = join_rgb(r, g, b)
-        print(f'color_tint: {color_shade}')
+    for _ in range(n):
+        r = f(r, factor)
+        g = f(g, factor)
+        b = f(b, factor)
+        rgb = ( r, g, b )
+        shades.append(rgb)
+
+        print(f'color_shade: {r}, {g}, {b}')
+        # color_shade = join_rgb(r, g, b)
+        # print(f'color_shade: {color_shade}')
+
+    return shades
 
 if __name__ == '__main__':
     # read command-line arguments
@@ -51,7 +58,12 @@ if __name__ == '__main__':
     parser.add_argument('n', type=int, help=help_n)
     args = parser.parse_args()
 
-    print('Shades:')
-    calculate_shades(args.color, args.n, 3/4)
-    print('Tints:')
-    calculate_tints(args.color, args.n, 1/4)
+    color_rgb = split_rgb(args.color)
+    lightened_shades = calculate_shades(color_rgb, args.n, 1/4, lighten)
+    darkened_shades = calculate_shades(color_rgb, args.n, 3/4, darken)
+
+    shades = lightened_shades[::-1] + [ color_rgb ] + darkened_shades
+
+    print()
+    for shade in shades:
+        print(f'shade: {shade}')
