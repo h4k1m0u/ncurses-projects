@@ -44,26 +44,21 @@ bool Menu::is_selected(size_t i) {
   return m_i_selected == i;
 }
 
-void Menu::draw_border(WINDOW* window) {
-  // terminal has colors capability
-  if (has_colors()) {
-    init_pair(1, COLOR_BLUE, -1);
-  }
-
+void Menu::draw_border(WINDOW* window, int color_pair) {
   // draw borders around window
-  wattr_on(window, A_BOLD | COLOR_PAIR(1), NULL);
+  wattr_on(window, A_BOLD | COLOR_PAIR(color_pair), NULL);
   box(window, ACS_VLINE, ACS_HLINE);
-  wattr_off(window, A_BOLD | COLOR_PAIR(1), NULL);
+  wattr_off(window, A_BOLD | COLOR_PAIR(color_pair), NULL);
 }
 
-void Menu::draw_items(WINDOW* window) {
+void Menu::draw_items(WINDOW* window, int color_pair) {
   for (size_t i = 0; i < MENU.size(); ++i) {
     const std::string& menu_item = MENU[i];
 
     if (i == m_i_selected)
-      wattr_on(window, A_REVERSE | A_BOLD | COLOR_PAIR(1), NULL);
+      wattr_on(window, A_REVERSE | A_BOLD | COLOR_PAIR(color_pair), NULL);
     else
-      wattr_off(window, A_REVERSE | A_BOLD | COLOR_PAIR(1), NULL);
+      wattr_off(window, A_REVERSE | A_BOLD | COLOR_PAIR(color_pair), NULL);
 
     // leave space for border
     int row = i + BORDER_THICKNESS + PADDING_Y;

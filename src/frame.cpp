@@ -21,12 +21,16 @@ WINDOW* Frame::create_window() {
   return win;
 }
 
-void Frame::draw(WINDOW* window) {
+void Frame::draw(WINDOW* window, int color_pair) {
+  wattr_on(window, COLOR_PAIR(color_pair), NULL);
+
   draw_left_border(window);
   draw_right_border(window);
   draw_top_border(window);
   draw_bottom_border(window);
   wrefresh(window);
+
+  wattr_off(window, COLOR_PAIR(color_pair), NULL);
 }
 
 void Frame::draw_left_border(WINDOW* window) {

@@ -10,8 +10,8 @@ public:
   void navigate_up();
   void navigate_down();
   bool is_selected(size_t i);
-  void draw_border(WINDOW* window);
-  void draw_items(WINDOW* window);
+  void draw_border(WINDOW* window, int color_pair);
+  void draw_items(WINDOW* window, int color_pair);
 
 private:
   int m_rows;

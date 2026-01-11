@@ -7,7 +7,7 @@ class Frame {
 public:
   Frame(int rows, int cols);
   WINDOW* create_window();
-  void draw(WINDOW* window);
+  void draw(WINDOW* window, int color_pair);
 
 private:
   int m_rows;
