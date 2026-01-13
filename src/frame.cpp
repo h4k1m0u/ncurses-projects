@@ -1,4 +1,5 @@
 #include "frame.hpp"
+#include "blocks.hpp"
 
 Frame::Frame(int rows, int cols):
   m_rows(rows),
@@ -8,10 +9,10 @@ Frame::Frame(int rows, int cols):
 }
 
 void Frame::init_cchars() {
-  setcchar(&m_block_full, &Frame::BLOCK_FULL_WCHAR, A_NORMAL, 0, NULL);
-  setcchar(&m_block_dark_shade, &Frame::BLOCK_DARK_SHADE_WCHAR, A_NORMAL, 0, NULL);
-  setcchar(&m_block_medium_shade, &Frame::BLOCK_MEDIUM_SHADE_WCHAR, A_NORMAL, 0, NULL);
-  setcchar(&m_block_light_shade, &Frame::BLOCK_LIGHT_SHADE_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_full, &Blocks::FULL_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_dark_shade, &Blocks::DARK_SHADE_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_medium_shade, &Blocks::MEDIUM_SHADE_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_light_shade, &Blocks::LIGHT_SHADE_WCHAR, A_NORMAL, 0, NULL);
 }
 
 WINDOW* Frame::create_window() {
@@ -21,7 +22,7 @@ WINDOW* Frame::create_window() {
   return win;
 }
 
-void Frame::draw(WINDOW* window, int color_pair) {
+void Frame::draw(WINDOW* window, ColorPair color_pair) {
   wattr_on(window, COLOR_PAIR(color_pair), NULL);
 
   draw_left_border(window);

@@ -7,7 +7,9 @@ SRC_FILES := $(shell find $(SRC_DIR) -name "*.cpp")
 OBJECTS_FILES := $(SRC_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS_FILES := $(OBJECTS_FILES:.o=.d)
 
-CPPFLAGS := -I$(INCLUDE_DIR)
+# link against ncursesw to support wide-characters (unicode)
+# _XOPEN_SOURCE_EXTENDED macro defined to make ncursesw functions work on termux/Android
+CPPFLAGS := -I$(INCLUDE_DIR) -D_XOPEN_SOURCE_EXTENDED
 CXXFLAGS := -std=c++20 -Wall -Wextra -Werror -MMD
 # LDFLAGS := -lncurses
 LDFLAGS := -lncursesw

@@ -1,10 +1,13 @@
 #include <ncurses.h>
 
 #include "constants.hpp"
+#include "gradient.hpp"
 #include "menu.hpp"
 #include "frame.hpp"
+#include "colors.hpp"
 
 using namespace Constants;
+using namespace Colors;
 
 size_t i_selected = 0;
 
@@ -35,6 +38,10 @@ int main() {
   Menu menu(rows, cols);
   WINDOW* window_menu = menu.create_window();
 
+  // gradient
+  Gradient gradient(rows, cols);
+  WINDOW* window_gradient = gradient.create_window();
+
   // get typed character (by getch()) without waiting for '\n'
   cbreak();
 
@@ -48,50 +55,45 @@ int main() {
   // sets the cursor state to invisible
   curs_set(0);
 
-  // terminal has colors capability
-  if (has_colors()) {
-    init_pair(COLOR_PAIR_BLUE4, Colors.at(COLOR_PAIR_BLUE4), -1);
-    init_pair(COLOR_PAIR_RED0, Colors.at(COLOR_PAIR_RED0), -1);
+  //////////////////////////////////////////////////
+  // Colors
+  //////////////////////////////////////////////////
 
-    ///
-    init_pair(COLOR_PAIR_YELLOW0, Colors.at(COLOR_PAIR_YELLOW0), -1);
-    init_pair(COLOR_PAIR_YELLOW1, Colors.at(COLOR_PAIR_YELLOW1), -1);
-    init_pair(COLOR_PAIR_YELLOW2, Colors.at(COLOR_PAIR_YELLOW2), -1);
-    init_pair(COLOR_PAIR_YELLOW3, Colors.at(COLOR_PAIR_YELLOW3), -1);
-    init_pair(COLOR_PAIR_YELLOW4, Colors.at(COLOR_PAIR_YELLOW4), -1);
-    ///
+  // initialize colors pairs
+  Colors::init_colors_pairs();
+  Colors::init_colors_indexes();
+
+  auto [ blue_pair, blue_index ] = Colors::get_color(BLUE_KEY, -1);
+  auto [ red_pair, red_index ] = Colors::get_color(RED_KEY, 0);
+
+  init_pair(blue_pair, blue_index, -1);
+  init_pair(red_pair, red_index, -1);
+
+  // grass gradient
+  std::vector<ColorPair> greens_pairs = Colors::colors_pairs[GREEN_KEY];
+  std::vector<ColorIndex> greens_indexes = Colors::colors_indexes[GREEN_KEY];
+
+  for (size_t i = 0; i < greens_pairs.size(); ++i) {
+    init_pair(greens_pairs[i], greens_indexes[i], -1);
   }
 
+  //////////////////////////////////////////////////
+  // Draw
+  //////////////////////////////////////////////////
+
   // draw frame borders
-  frame.draw(window_frame, COLOR_PAIR_BLUE4);
+  frame.draw(window_frame, blue_pair);
 
   // draw borders around menu window
-  menu.draw_border(window_menu, COLOR_PAIR_RED0);
+  menu.draw_border(window_menu, red_pair);
 
-  ///
-  constexpr wchar_t BLOCK_FULL_WCHAR = L'█';
-  cchar_t m_block_full;
-  setcchar(&m_block_full, &BLOCK_FULL_WCHAR, A_NORMAL, 0, NULL);
-  WINDOW* win = newwin(rows - 2*4, cols - 2*4, 4, 4);
-
-  for (int j = 0; j < cols - 2*4; ++j) {
-    for (int i = 0; i < 2*5; i += 2) {
-      int color_pair = i/2 + 6;
-      wattr_on(win, COLOR_PAIR(color_pair), NULL);
-
-      mvwadd_wch(win, i, j, &m_block_full);
-      mvwadd_wch(win, i + 1, j, &m_block_full);
-
-      wattr_off(win, COLOR_PAIR(color_pair), NULL);
-    } // END ROWS
-  } // END COLS
-  wrefresh(win);
-  ///
+  // draw gradient of yellow lines
+  gradient.draw(window_gradient, greens_pairs);
 
   int c = 0;
 
   while (c != 'q' && c != 'Q' && !(menu.is_selected(I_LAST) && c == '\n')) {
-    menu.draw_items(window_menu, COLOR_PAIR_RED0);
+    menu.draw_items(window_menu, red_pair);
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);
@@ -107,6 +109,7 @@ int main() {
     napms(50);
   }
 
+  delwin(window_gradient);
   delwin(window_frame);
   delwin(window_menu);
   endwin();
