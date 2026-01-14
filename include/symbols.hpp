@@ -19,6 +19,7 @@ namespace Symbols {
   constexpr wchar_t LIGHT_SHADE_WCHAR = u'░';  // Light Shade: '\u2591'
 
   // stars emojis not cut while drawn on boxes (in contrast with text ones)
+  // NOTE: this character occupies two terminal cells
   constexpr wchar_t STAR = L'⭐'; // \u2B50
 };
 

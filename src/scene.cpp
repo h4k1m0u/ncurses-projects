@@ -12,8 +12,11 @@ Scene::Scene(int rows, int cols):
 
   m_seed(std::random_device()),
   m_generator(m_seed()),
-  m_uniform_row(0, m_rows),
-  m_uniform_col(0, m_cols),
+
+  // star unicode characters take two terminal cells
+  // put them only in even cell indexes
+  m_uniform_col(0, (m_cols - 2) % 2 == 0 ? m_cols - 2 : m_cols - 3),
+
   m_uniform_n_stars_row(0, MAX_N_STARS_ROW)
 {
   setcchar(&m_block_full, &Symbols::FULL_WCHAR, A_NORMAL, 0, NULL);
@@ -35,8 +38,14 @@ void Scene::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_gras
 void Scene::draw_stars_row(WINDOW* window, int row) {
   int n_stars_row = m_uniform_n_stars_row(m_generator);
 
+  // leave two terminal cells for each star (e.g. occupy only even positions)
+  // otherwise draws empty boxes due to UB: https://stackoverflow.com/a/67430307/2228912
   for (int i = 0; i < n_stars_row; ++i) {
-    int col = m_uniform_col(m_generator);
+    int col;
+    do {
+      col = m_uniform_col(m_generator);
+    } while (col % 2 == 1);
+
     mvwadd_wch(window, row, col, &m_star);
   }
 }
@@ -64,6 +73,7 @@ void Scene::draw_sky(WINDOW* window, const std::vector<ColorPair>& colors_pairs_
 
   // start from top for night sky (shades of gray)
   for (int i = 0; i < n_colors; i++) {
+    /* Blocks */
     int row = i;
 
     int color_pair_sky = colors_pairs_sky[i];
@@ -73,6 +83,7 @@ void Scene::draw_sky(WINDOW* window, const std::vector<ColorPair>& colors_pairs_
       mvwadd_wch(window, row, col, &m_block_full);
     } // END COLS
 
+    /* Stars */
     wattr_off(window, COLOR_PAIR(color_pair_sky), NULL);
 
     int color_pair_star = colors_pairs_stars[i];
