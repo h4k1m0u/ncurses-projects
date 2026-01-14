@@ -1,7 +1,7 @@
-#ifndef BLOCKS_HPP
-#define BLOCKS_HPP
+#ifndef SYMBOLS_HPP
+#define SYMBOLS_HPP
 
-namespace Blocks {
+namespace Symbols {
   /**
    * wchar_t literal (can hold UTF-32 on linux, UTF-16 on windows)
    * Sorted from lightest to darkest (Light Shade is the darkest when rendered on the terminal!)
@@ -17,6 +17,9 @@ namespace Blocks {
   constexpr wchar_t DARK_SHADE_WCHAR = u'▓';   // Dark Shade:  '\u2593'
   constexpr wchar_t MEDIUM_SHADE_WCHAR = u'▒'; // Dark Shade:  '\u2592'
   constexpr wchar_t LIGHT_SHADE_WCHAR = u'░';  // Light Shade: '\u2591'
+
+  // stars emojis not cut while drawn on boxes (in contrast with text ones)
+  constexpr wchar_t STAR = L'⭐'; // \u2B50
 };
 
 #endif

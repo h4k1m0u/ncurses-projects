@@ -22,7 +22,8 @@ namespace Colors {
   // inverted to draw grass from bottom to top (livelier color at the top)
   constexpr std::string GREEN_KEY = "green";
   // constexpr ColorsIndexesRange GREENS_INDEXES(46, 50);
-  constexpr ColorsIndexesRange GREENS_INDEXES(50, 46);
+  // constexpr ColorsIndexesRange GREENS_INDEXES(50, 46);
+  constexpr ColorsIndexesRange GREENS_INDEXES(48, 46);
 
   // yellow: 230 (less saturated) - 226 (saturated)
   constexpr std::string YELLOW_KEY = "yellow";
@@ -33,8 +34,11 @@ namespace Colors {
   constexpr ColorsIndexesRange REDS_INDEXES(160, 164);
 
   // gray shades from white to black
+  // inv: white on gray background
   constexpr std::string GRAY_KEY = "gray";
-  constexpr ColorsIndexesRange GRAYS_INDEXES(232, 255);
+  constexpr std::string GRAY_INV_KEY = "gray_inv";
+  // constexpr ColorsIndexesRange GRAYS_INDEXES(232, 255);
+  constexpr ColorsIndexesRange GRAYS_INDEXES(255, 235);
 
   // colors indexes (`./utils/print_colors_256.sh -n`)
   void init_colors_indexes();

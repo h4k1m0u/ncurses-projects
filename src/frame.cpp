@@ -1,5 +1,5 @@
 #include "frame.hpp"
-#include "blocks.hpp"
+#include "symbols.hpp"
 
 Frame::Frame(int rows, int cols):
   m_rows(rows),
@@ -9,10 +9,10 @@ Frame::Frame(int rows, int cols):
 }
 
 void Frame::init_cchars() {
-  setcchar(&m_block_full, &Blocks::FULL_WCHAR, A_NORMAL, 0, NULL);
-  setcchar(&m_block_dark_shade, &Blocks::DARK_SHADE_WCHAR, A_NORMAL, 0, NULL);
-  setcchar(&m_block_medium_shade, &Blocks::MEDIUM_SHADE_WCHAR, A_NORMAL, 0, NULL);
-  setcchar(&m_block_light_shade, &Blocks::LIGHT_SHADE_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_full, &Symbols::FULL_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_dark_shade, &Symbols::DARK_SHADE_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_medium_shade, &Symbols::MEDIUM_SHADE_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_block_light_shade, &Symbols::LIGHT_SHADE_WCHAR, A_NORMAL, 0, NULL);
 }
 
 WINDOW* Frame::create_window() {

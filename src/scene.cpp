@@ -1,0 +1,85 @@
+#include "scene.hpp"
+#include "symbols.hpp"
+#include "constants.hpp"
+#include <ncurses.h>
+
+using namespace Constants;
+
+Scene::Scene(int rows, int cols):
+  // ignore frame above/below & left/right
+  m_rows(rows - 2*N_CHARS_FRAME),
+  m_cols(cols - 2*N_CHARS_FRAME),
+
+  m_seed(std::random_device()),
+  m_generator(m_seed()),
+  m_uniform_row(0, m_rows),
+  m_uniform_col(0, m_cols),
+  m_uniform_n_stars_row(0, MAX_N_STARS_ROW)
+{
+  setcchar(&m_block_full, &Symbols::FULL_WCHAR, A_NORMAL, 0, NULL);
+  setcchar(&m_star, &Symbols::STAR, A_NORMAL, 0, NULL);
+}
+
+WINDOW* Scene::create_window() {
+  WINDOW* win = newwin(m_rows, m_cols, N_CHARS_FRAME, N_CHARS_FRAME);
+
+  return win;
+}
+
+void Scene::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_sky, const std::vector<ColorPair>& colors_pairs_stars) {
+  draw_grass(window, colors_pairs_grass);
+  draw_sky(window, colors_pairs_sky, colors_pairs_stars);
+  wrefresh(window);
+}
+
+void Scene::draw_stars_row(WINDOW* window, int row) {
+  int n_stars_row = m_uniform_n_stars_row(m_generator);
+
+  for (int i = 0; i < n_stars_row; ++i) {
+    int col = m_uniform_col(m_generator);
+    mvwadd_wch(window, row, col, &m_star);
+  }
+}
+
+void Scene::draw_grass(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass) {
+  int n_colors = colors_pairs_grass.size();
+
+  for (int col = 0; col < m_cols; ++col) {
+    for (int i = 0; i < n_colors; i++) {
+      int color_pair = colors_pairs_grass[i];
+      wattr_on(window, COLOR_PAIR(color_pair), NULL);
+
+      // pair of rows in same color, starting from those just above frame (grass)
+      int row = (m_rows - 1) - 2*i;
+      mvwadd_wch(window, row, col, &m_block_full);
+      mvwadd_wch(window, row - 1, col, &m_block_full);
+
+      wattr_off(window, COLOR_PAIR(color_pair), NULL);
+    } // END ROWS
+  } // END COLS
+}
+
+void Scene::draw_sky(WINDOW* window, const std::vector<ColorPair>& colors_pairs_sky, const std::vector<ColorPair>& colors_pairs_stars) {
+  int n_colors = colors_pairs_sky.size();
+
+  // start from top for night sky (shades of gray)
+  for (int i = 0; i < n_colors; i++) {
+    int row = i;
+
+    int color_pair_sky = colors_pairs_sky[i];
+    wattr_on(window, COLOR_PAIR(color_pair_sky), NULL);
+
+    for (int col = 0; col < m_cols; ++col) {
+      mvwadd_wch(window, row, col, &m_block_full);
+    } // END COLS
+
+    wattr_off(window, COLOR_PAIR(color_pair_sky), NULL);
+
+    int color_pair_star = colors_pairs_stars[i];
+    wattr_on(window, COLOR_PAIR(color_pair_star), NULL);
+
+    draw_stars_row(window, row);
+
+    wattr_off(window, COLOR_PAIR(color_pair_star), NULL);
+  } // END ROWS/COLORS
+}

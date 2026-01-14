@@ -1,10 +1,10 @@
 #include <ncurses.h>
 
 #include "constants.hpp"
-#include "gradient.hpp"
 #include "menu.hpp"
 #include "frame.hpp"
 #include "colors.hpp"
+#include "scene.hpp"
 
 using namespace Constants;
 using namespace Colors;
@@ -38,9 +38,9 @@ int main() {
   Menu menu(rows, cols);
   WINDOW* window_menu = menu.create_window();
 
-  // gradient
-  Gradient gradient(rows, cols);
-  WINDOW* window_gradient = gradient.create_window();
+  // scene
+  Scene scene(rows, cols);
+  WINDOW* window_scene = scene.create_window();
 
   // get typed character (by getch()) without waiting for '\n'
   cbreak();
@@ -77,6 +77,17 @@ int main() {
     init_pair(greens_pairs[i], greens_indexes[i], -1);
   }
 
+  // night sky gradient
+  // inv: defined by its bg color (used to make stars blend in on rows of boxes in shades of gray)
+  std::vector<ColorPair> grays_pairs = Colors::colors_pairs[GRAY_KEY];
+  std::vector<ColorPair> grays_inv_pairs = Colors::colors_pairs[GRAY_INV_KEY];
+  std::vector<ColorIndex> grays_indexes = Colors::colors_indexes[GRAY_KEY];
+
+  for (size_t i = 0; i < grays_pairs.size(); ++i) {
+    init_pair(grays_pairs[i], grays_indexes[i], -1);
+    init_pair(grays_inv_pairs[i], -1, grays_indexes[i]);
+  }
+
   //////////////////////////////////////////////////
   // Draw
   //////////////////////////////////////////////////
@@ -87,8 +98,8 @@ int main() {
   // draw borders around menu window
   menu.draw_border(window_menu, red_pair);
 
-  // draw gradient of yellow lines
-  gradient.draw(window_gradient, greens_pairs);
+  // draw grass, night sky gradients & stars
+  scene.draw(window_scene, greens_pairs, grays_pairs, grays_inv_pairs);
 
   int c = 0;
 
@@ -109,7 +120,7 @@ int main() {
     napms(50);
   }
 
-  delwin(window_gradient);
+  delwin(window_scene);
   delwin(window_frame);
   delwin(window_menu);
   endwin();

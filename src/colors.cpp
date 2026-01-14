@@ -34,6 +34,7 @@ namespace {
 }
 
 void Colors::init_colors_pairs() {
+  // pairs (slots) for fg colors
   // colors pairs start from 1 (as 0 is reserved for default terminal color)
   ColorPair pair = 1;
   append_color_pairs(BLUE_KEY, BLUES_INDEXES, pair);
@@ -41,9 +42,13 @@ void Colors::init_colors_pairs() {
   append_color_pairs(YELLOW_KEY, YELLOWS_INDEXES, pair);
   append_color_pairs(RED_KEY, REDS_INDEXES, pair);
   append_color_pairs(GRAY_KEY, GRAYS_INDEXES, pair);
+
+  // pairs (slots) for bg colors
+  append_color_pairs(GRAY_INV_KEY, GRAYS_INDEXES, pair);
 }
 
 void Colors::init_colors_indexes() {
+  // colors indexes from palette included in terminal
   append_color_indexes(BLUE_KEY, BLUES_INDEXES);
   append_color_indexes(GREEN_KEY, GREENS_INDEXES);
   append_color_indexes(YELLOW_KEY, YELLOWS_INDEXES);
