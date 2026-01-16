@@ -6,6 +6,8 @@
 
 class Frame {
 public:
+  static constexpr int HEIGHT = 4;
+
   Frame(int rows, int cols);
   WINDOW* create_window();
   void draw(WINDOW* window, ColorPair color_pair);

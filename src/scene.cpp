@@ -1,14 +1,13 @@
 #include "scene.hpp"
+#include "menu.hpp"
 #include "symbols.hpp"
-#include "constants.hpp"
+#include "frame.hpp"
 #include <ncurses.h>
-
-using namespace Constants;
 
 Scene::Scene(int rows, int cols):
   // ignore frame above/below & left/right
-  m_rows(rows - 2*N_CHARS_FRAME),
-  m_cols(cols - 2*N_CHARS_FRAME),
+  m_rows(rows - 2*Frame::HEIGHT - Menu::HEIGHT),
+  m_cols(cols - 2*Frame::HEIGHT),
 
   m_seed(std::random_device()),
   m_generator(m_seed()),
@@ -24,12 +23,12 @@ Scene::Scene(int rows, int cols):
 }
 
 WINDOW* Scene::create_window() {
-  WINDOW* win = newwin(m_rows, m_cols, N_CHARS_FRAME, N_CHARS_FRAME);
+  WINDOW* win = newwin(m_rows, m_cols, Frame::HEIGHT, Frame::HEIGHT);
 
   return win;
 }
 
-void Scene::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_sky, const std::vector<ColorPair>& colors_pairs_stars) {
+void Scene::draw(WINDOW* window, [[ maybe_unused ]] const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_sky, const std::vector<ColorPair>& colors_pairs_stars) {
   draw_grass(window, colors_pairs_grass);
   draw_sky(window, colors_pairs_sky, colors_pairs_stars);
   wrefresh(window);
@@ -38,7 +37,7 @@ void Scene::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_gras
 void Scene::draw_stars_row(WINDOW* window, int row) {
   int n_stars_row = m_uniform_n_stars_row(m_generator);
 
-  // leave two terminal cells for each star (e.g. occupy only even positions)
+  // leave two terminal cells horizontally for each star (e.g. occupy only even positions)
   // otherwise draws empty boxes due to UB: https://stackoverflow.com/a/67430307/2228912
   for (int i = 0; i < n_stars_row; ++i) {
     int col;

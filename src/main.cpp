@@ -1,12 +1,10 @@
 #include <ncurses.h>
 
-#include "constants.hpp"
 #include "menu.hpp"
 #include "frame.hpp"
 #include "colors.hpp"
 #include "scene.hpp"
 
-using namespace Constants;
 using namespace Colors;
 
 size_t i_selected = 0;
@@ -35,6 +33,7 @@ int main() {
 
   // separate menu window that doesn't cover all terminal,
   // so it can be h/v centered
+  // TODO: make menu horizontal & render it at bottom
   Menu menu(rows, cols);
   WINDOW* window_menu = menu.create_window();
 
@@ -103,17 +102,17 @@ int main() {
 
   int c = 0;
 
-  while (c != 'q' && c != 'Q' && !(menu.is_selected(I_LAST) && c == '\n')) {
+  while (c != 'q' && c != 'Q' && !(menu.is_quit_selected() && c == '\n')) {
     menu.draw_items(window_menu, red_pair);
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);
     c = wgetch(window_menu);
 
-    if (c == KEY_UP)
-      menu.navigate_up();
-    else if (c == KEY_DOWN)
-      menu.navigate_down();
+    if (c == KEY_LEFT)
+      menu.navigate_left();
+    else if (c == KEY_RIGHT)
+      menu.navigate_right();
 
     // sleep for 50ms (cap fps at ~ 20)
     // napms(16); // fps ~ 60
