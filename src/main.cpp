@@ -4,12 +4,17 @@
 #include "frame.hpp"
 #include "colors.hpp"
 #include "scene.hpp"
+#include "mario.hpp"
 
 using namespace Colors;
 
 size_t i_selected = 0;
 
 int main() {
+  //////////////////////////////////////////////////
+  // Init ncurses
+  //////////////////////////////////////////////////
+
   // set locale to utf-8 to support unicode characters to print frame border (otherwise prints gibberish)
   setlocale(LC_ALL, "");
 
@@ -32,14 +37,16 @@ int main() {
   WINDOW* window_frame = frame.create_window();
 
   // separate menu window that doesn't cover all terminal,
-  // so it can be h/v centered
-  // TODO: make menu horizontal & render it at bottom
   Menu menu(rows, cols);
   WINDOW* window_menu = menu.create_window();
 
   // scene
   Scene scene(rows, cols);
   WINDOW* window_scene = scene.create_window();
+
+  // mario
+  Mario mario(rows, cols);
+  WINDOW* window_mario = mario.create_window();
 
   // get typed character (by getch()) without waiting for '\n'
   cbreak();
@@ -53,6 +60,10 @@ int main() {
 
   // sets the cursor state to invisible
   curs_set(0);
+
+  // set getch() to be non-blocking (to animate mario)
+  nodelay(window_menu, TRUE);
+
 
   //////////////////////////////////////////////////
   // Colors
@@ -105,13 +116,16 @@ int main() {
   // draw borders around menu window
   menu.draw_border(window_menu, red_pair);
 
+  // TODO: separate window for mario from scene behind it (to avoid clearing it!)
   // draw grass, night sky gradients & stars
-  scene.draw(window_scene, greens_pairs, grays_pairs, grays_inv_pairs, mario_pairs);
+  scene.draw(window_scene, greens_pairs, grays_pairs, grays_inv_pairs);
 
   int c = 0;
+  int frame_index = 0;
 
   while (c != 'q' && c != 'Q' && !(menu.is_quit_selected() && c == '\n')) {
     menu.draw_items(window_menu, red_pair);
+    mario.draw(window_mario, mario_pairs, frame_index++);
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);
@@ -127,6 +141,7 @@ int main() {
     napms(50);
   }
 
+  delwin(window_mario);
   delwin(window_scene);
   delwin(window_frame);
   delwin(window_menu);
