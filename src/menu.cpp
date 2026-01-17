@@ -26,7 +26,6 @@ std::vector<int> Menu::get_n_chars_items() {
 /* new window that doesn't cover all terminal (coords start from 0) */
 WINDOW* Menu::create_window() {
   WINDOW* win = newwin(HEIGHT, m_cols, m_y, m_x);
-  printf("Width: %d", m_width_item);
 
   return win;
 }

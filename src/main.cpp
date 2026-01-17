@@ -87,6 +87,14 @@ int main() {
     init_pair(grays_inv_pairs[i], -1, grays_indexes[i]);
   }
 
+  // mario skin
+  std::vector<ColorPair> mario_pairs = Colors::colors_pairs[MARIO_KEY];
+  std::vector<ColorIndex> mario_indexes = Colors::colors_indexes[MARIO_KEY];
+
+  for (size_t i = 0; i < mario_pairs.size(); ++i) {
+    init_pair(mario_pairs[i], mario_indexes[i], -1);
+  }
+
   //////////////////////////////////////////////////
   // Draw
   //////////////////////////////////////////////////
@@ -98,7 +106,7 @@ int main() {
   menu.draw_border(window_menu, red_pair);
 
   // draw grass, night sky gradients & stars
-  scene.draw(window_scene, greens_pairs, grays_pairs, grays_inv_pairs);
+  scene.draw(window_scene, greens_pairs, grays_pairs, grays_inv_pairs, mario_pairs);
 
   int c = 0;
 

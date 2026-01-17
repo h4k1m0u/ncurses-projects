@@ -1,4 +1,5 @@
 #include "scene.hpp"
+#include "colors.hpp"
 #include "menu.hpp"
 #include "symbols.hpp"
 #include "frame.hpp"
@@ -28,9 +29,10 @@ WINDOW* Scene::create_window() {
   return win;
 }
 
-void Scene::draw(WINDOW* window, [[ maybe_unused ]] const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_sky, const std::vector<ColorPair>& colors_pairs_stars) {
+void Scene::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_sky, const std::vector<ColorPair>& colors_pairs_stars, const std::vector<ColorPair>& colors_pairs_mario) {
   draw_grass(window, colors_pairs_grass);
   draw_sky(window, colors_pairs_sky, colors_pairs_stars);
+  draw_mario(window, colors_pairs_mario);
   wrefresh(window);
 }
 
@@ -92,4 +94,22 @@ void Scene::draw_sky(WINDOW* window, const std::vector<ColorPair>& colors_pairs_
 
     wattr_off(window, COLOR_PAIR(color_pair_star), NULL);
   } // END ROWS/COLORS
+}
+
+void Scene::draw_mario(WINDOW* window, const std::vector<ColorPair>& colors_pairs_mario) {
+  int n_colors = COORDS_MARIO.size();
+
+  for (int i = 0; i < n_colors; ++i) {
+    ColorPair color_pair = colors_pairs_mario[i];
+    const std::vector<Coord>& coords_color = COORDS_MARIO[i];
+
+    wattr_on(window, COLOR_PAIR(color_pair), NULL);
+
+    for (const auto& [ row, col ] : coords_color) {
+      mvwadd_wch(window, row, col, &m_block_full);
+    } // END COORDS FOR COLOR
+
+    wattr_off(window, COLOR_PAIR(color_pair), NULL);
+
+  } // END COLORS
 }

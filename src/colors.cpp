@@ -7,7 +7,10 @@ ColorsIndexes Colors::colors_indexes;
 
 // private namespace
 namespace {
-  /* Support cases where color indexes (in range) are sorted in ASC or DESC */
+  /**
+   * From a range
+   * Support cases where color indexes (in range) are sorted in ASC or DESC
+   */
   void append_color_pairs(const ColorName& color_name, const ColorsIndexesRange& pair_indexes, ColorPair& pair) {
     auto [ index_start, index_end ] = pair_indexes;
     ColorIndex index_max = std::max(index_start, index_end);
@@ -16,6 +19,11 @@ namespace {
 
     for (int i = 0; i < n; ++i)
       Colors::colors_pairs[color_name].push_back(pair++);
+  }
+
+  void append_color_pairs_from_array(const ColorName& color_name, int n_indexes, ColorPair& pair) {
+    ColorsIndexesRange pair_indexes_mario(1, n_indexes);
+    append_color_pairs(color_name, pair_indexes_mario, pair);
   }
 
   void append_color_indexes(const ColorName& color_name, const ColorsIndexesRange& pair_indexes) {
@@ -29,6 +37,13 @@ namespace {
     else {
       while (index >= index_end)
         Colors::colors_indexes[color_name].push_back(index--);
+    }
+  }
+
+  void append_color_indexes_from_array(const ColorName& color_name, const ColorIndex* colors_indexes, int n_indexes) {
+    for (int i = 0; i < n_indexes; ++i) {
+      ColorIndex color_index = colors_indexes[i];
+      Colors::colors_indexes[color_name].push_back(color_index);
     }
   }
 }
@@ -45,6 +60,9 @@ void Colors::init_colors_pairs() {
 
   // pairs (slots) for bg colors
   append_color_pairs(GRAY_INV_KEY, GRAYS_INDEXES, pair);
+
+  // pairs (slots) for mario
+  append_color_pairs_from_array(MARIO_KEY, N_COLORS_MARIO, pair);
 }
 
 void Colors::init_colors_indexes() {
@@ -54,6 +72,8 @@ void Colors::init_colors_indexes() {
   append_color_indexes(YELLOW_KEY, YELLOWS_INDEXES);
   append_color_indexes(RED_KEY, REDS_INDEXES);
   append_color_indexes(GRAY_KEY, GRAYS_INDEXES);
+
+  append_color_indexes_from_array(MARIO_KEY, MARIO_INDEXES, N_COLORS_MARIO);
 }
 
 std::pair<ColorPair, ColorIndex> Colors::get_color(const ColorName& color_name, int i) {
