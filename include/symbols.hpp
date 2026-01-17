@@ -18,9 +18,13 @@ namespace Symbols {
   constexpr wchar_t MEDIUM_SHADE_WCHAR = u'▒'; // Dark Shade:  '\u2592'
   constexpr wchar_t LIGHT_SHADE_WCHAR = u'░';  // Light Shade: '\u2591'
 
-  // stars emojis not cut while drawn on boxes (in contrast with text ones)
+  // stars emojis not cut while drawn on boxes with a non-black background (in contrast with text ones)
   // NOTE: this character occupies two terminal cells
-  constexpr wchar_t STAR = L'⭐'; // \u2B50
+  // constexpr wchar_t STAR = L'⭐'; // \u2B50
+  constexpr wchar_t STAR_BLACK = L'★'; // \u2605
+  constexpr wchar_t STAR_WHITE = L'☆'; // \u2606
+  constexpr wchar_t STAR_BLACK4 = L'✦'; // \u2726
+  constexpr wchar_t STAR_WHITE4 = L'✧'; // \u2727
 };
 
 #endif

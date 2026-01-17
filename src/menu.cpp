@@ -3,8 +3,8 @@
 #include <ncurses.h>
 
 Menu::Menu(int rows, int cols):
-  m_cols(cols - 2*Frame::HEIGHT),
-  m_x(Frame::HEIGHT),
+  m_cols(cols - 2*Frame::WIDTH),
+  m_x(Frame::WIDTH),
   m_y(rows - Frame::HEIGHT - HEIGHT),
   m_i_selected(0),
   m_width_item((m_cols - 2*BORDER_THICKNESS) / N_ITEMS),

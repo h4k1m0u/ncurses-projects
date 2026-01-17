@@ -3,7 +3,7 @@
 #include "menu.hpp"
 #include "frame.hpp"
 #include "colors.hpp"
-#include "scene.hpp"
+#include "background.hpp"
 #include "mario.hpp"
 
 using namespace Colors;
@@ -40,9 +40,9 @@ int main() {
   Menu menu(rows, cols);
   WINDOW* window_menu = menu.create_window();
 
-  // scene
-  Scene scene(rows, cols);
-  WINDOW* window_scene = scene.create_window();
+  // background (stars and background)
+  Background background(rows, cols);
+  WINDOW* window_background = background.create_window();
 
   // mario
   Mario mario(rows, cols);
@@ -79,7 +79,7 @@ int main() {
   init_pair(blue_pair, blue_index, -1);
   init_pair(red_pair, red_index, -1);
 
-  // grass gradient
+  // green gradient for grass
   std::vector<ColorPair> greens_pairs = Colors::colors_pairs[GREEN_KEY];
   std::vector<ColorIndex> greens_indexes = Colors::colors_indexes[GREEN_KEY];
 
@@ -87,15 +87,12 @@ int main() {
     init_pair(greens_pairs[i], greens_indexes[i], -1);
   }
 
-  // night sky gradient
-  // inv: defined by its bg color (used to make stars blend in on rows of boxes in shades of gray)
+  // gray gradient for stars
   std::vector<ColorPair> grays_pairs = Colors::colors_pairs[GRAY_KEY];
-  std::vector<ColorPair> grays_inv_pairs = Colors::colors_pairs[GRAY_INV_KEY];
   std::vector<ColorIndex> grays_indexes = Colors::colors_indexes[GRAY_KEY];
 
   for (size_t i = 0; i < grays_pairs.size(); ++i) {
     init_pair(grays_pairs[i], grays_indexes[i], -1);
-    init_pair(grays_inv_pairs[i], -1, grays_indexes[i]);
   }
 
   // mario skin
@@ -116,9 +113,8 @@ int main() {
   // draw borders around menu window
   menu.draw_border(window_menu, red_pair);
 
-  // TODO: separate window for mario from scene behind it (to avoid clearing it!)
   // draw grass, night sky gradients & stars
-  scene.draw(window_scene, greens_pairs, grays_pairs, grays_inv_pairs);
+  background.draw(window_background, greens_pairs, grays_pairs);
 
   int c = 0;
   int frame_index = 0;
@@ -142,7 +138,7 @@ int main() {
   }
 
   delwin(window_mario);
-  delwin(window_scene);
+  delwin(window_background);
   delwin(window_frame);
   delwin(window_menu);
   endwin();

@@ -21,13 +21,7 @@ namespace Colors {
   // green: 46 (less saturated) - 50 (less saturated)
   // inverted to draw grass from bottom to top (livelier color at the top)
   constexpr ColorName GREEN_KEY = "green";
-  // constexpr ColorsIndexesRange GREENS_INDEXES(46, 50);
-  // constexpr ColorsIndexesRange GREENS_INDEXES(50, 46);
   constexpr ColorsIndexesRange GREENS_INDEXES(48, 46);
-
-  // yellow: 230 (less saturated) - 226 (saturated)
-  constexpr ColorName YELLOW_KEY = "yellow";
-  constexpr ColorsIndexesRange YELLOWS_INDEXES(226, 230);
 
   // red: 160 (red) - 164 (pink)
   constexpr ColorName RED_KEY = "red";
@@ -36,8 +30,6 @@ namespace Colors {
   // gray shades from white to black
   // inv: white on gray background
   constexpr ColorName GRAY_KEY = "gray";
-  constexpr ColorName GRAY_INV_KEY = "gray_inv";
-  // constexpr ColorsIndexesRange GRAYS_INDEXES(232, 255);
   constexpr ColorsIndexesRange GRAYS_INDEXES(255, 235);
 
   // mario skin (std::array not used so that functions can accept arrays with different lengths)

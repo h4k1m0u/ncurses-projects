@@ -6,6 +6,7 @@
 
 class Frame {
 public:
+  static constexpr int WIDTH = 4;
   static constexpr int HEIGHT = 4;
 
   Frame(int rows, int cols);

@@ -4,6 +4,9 @@ $ make -j
 $ ./build/main
 ```
 
+# Screenshot
+![Screenshot](/screenshots/screenshot.png)
+
 # Platforms
 Tested on:
 - Ubuntu/Konsole.

@@ -9,8 +9,8 @@ private:
   /* inline members don't require an out-of-class definition (in cpp file) */
   inline static const std::vector<std::string> ITEMS = {
     "Start",
-    "Save",
-    "Settings",
+    "Stop",
+    "Reverse",
     "Quit",
   };
 

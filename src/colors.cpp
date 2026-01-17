@@ -54,12 +54,10 @@ void Colors::init_colors_pairs() {
   ColorPair pair = 1;
   append_color_pairs(BLUE_KEY, BLUES_INDEXES, pair);
   append_color_pairs(GREEN_KEY, GREENS_INDEXES, pair);
-  append_color_pairs(YELLOW_KEY, YELLOWS_INDEXES, pair);
   append_color_pairs(RED_KEY, REDS_INDEXES, pair);
-  append_color_pairs(GRAY_KEY, GRAYS_INDEXES, pair);
 
-  // pairs (slots) for bg colors
-  append_color_pairs(GRAY_INV_KEY, GRAYS_INDEXES, pair);
+  // pairs (slots) for stars (from bright to dark)
+  append_color_pairs(GRAY_KEY, GRAYS_INDEXES, pair);
 
   // pairs (slots) for mario
   append_color_pairs_from_array(MARIO_KEY, N_COLORS_MARIO, pair);
@@ -69,7 +67,6 @@ void Colors::init_colors_indexes() {
   // colors indexes from palette included in terminal
   append_color_indexes(BLUE_KEY, BLUES_INDEXES);
   append_color_indexes(GREEN_KEY, GREENS_INDEXES);
-  append_color_indexes(YELLOW_KEY, YELLOWS_INDEXES);
   append_color_indexes(RED_KEY, REDS_INDEXES);
   append_color_indexes(GRAY_KEY, GRAYS_INDEXES);
 
