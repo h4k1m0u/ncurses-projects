@@ -4,6 +4,9 @@ $ make -j
 $ ./build/main
 ```
 
+# Prerequisites
+- ncurses.
+
 # Screenshot
 ![Screenshot](/screenshots/screenshot.png)
 

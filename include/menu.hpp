@@ -1,8 +1,10 @@
 #ifndef MENU_HPP
 #define MENU_HPP
 
-#include "colors.hpp"
 #include <ncurses.h>
+
+#include "colors.hpp"
+#include "menu_item.hpp"
 
 class Menu {
 private:
@@ -22,12 +24,13 @@ private:
   int m_cols;
   int m_x;
   int m_y;
-  size_t m_i_selected;
+
   int m_width_item;
   std::vector<int> m_n_chars_items;
 
+  size_t m_i_selected;
+
   std::vector<int> get_n_chars_items();
-  bool is_selected(size_t i);
 
 public:
   static constexpr int HEIGHT = BORDER_THICKNESS + 1 + BORDER_THICKNESS;
@@ -36,7 +39,7 @@ public:
   WINDOW* create_window();
   void navigate_left();
   void navigate_right();
-  bool is_quit_selected();
+  MenuItem get_selected();
   void draw_border(WINDOW* window, ColorPair color_pair);
   void draw_items(WINDOW* window, ColorPair color_pair);
 };

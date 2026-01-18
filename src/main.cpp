@@ -5,6 +5,7 @@
 #include "colors.hpp"
 #include "background.hpp"
 #include "mario.hpp"
+#include "menu_item.hpp"
 
 using namespace Colors;
 
@@ -119,9 +120,15 @@ int main() {
   int c = 0;
   int frame_index = 0;
 
-  while (c != 'q' && c != 'Q' && !(menu.is_quit_selected() && c == '\n')) {
+  bool is_playing = true;
+  bool is_reversed = false;
+  bool is_quitting = false;
+
+  while (!is_quitting) {
     menu.draw_items(window_menu, red_pair);
-    mario.draw(window_mario, mario_pairs, frame_index++);
+
+    if (is_playing)
+      mario.draw(window_mario, mario_pairs, is_reversed, frame_index++);
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);
@@ -131,6 +138,25 @@ int main() {
       menu.navigate_left();
     else if (c == KEY_RIGHT)
       menu.navigate_right();
+    else if (c == 'q' || c == 'Q')
+      is_quitting = true;
+    else if (c == '\n') {
+      MenuItem menu_item_selected = menu.get_selected();
+
+      switch (menu_item_selected) {
+        case MenuItem::START:
+          is_playing = true;
+          break;
+        case MenuItem::STOP:
+          is_playing = false;
+          break;
+        case MenuItem::REVERSE:
+          is_reversed = !is_reversed;
+          break;
+        case MenuItem::QUIT:
+          is_quitting = true;
+      }
+    }
 
     // sleep for 50ms (cap fps at ~ 20)
     // napms(16); // fps ~ 60

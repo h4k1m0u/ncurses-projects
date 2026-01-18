@@ -6,9 +6,9 @@ Menu::Menu(int rows, int cols):
   m_cols(cols - 2*Frame::WIDTH),
   m_x(Frame::WIDTH),
   m_y(rows - Frame::HEIGHT - HEIGHT),
-  m_i_selected(0),
   m_width_item((m_cols - 2*BORDER_THICKNESS) / N_ITEMS),
-  m_n_chars_items(get_n_chars_items())
+  m_n_chars_items(get_n_chars_items()),
+  m_i_selected(0)
 {
 }
 
@@ -38,12 +38,8 @@ void Menu::navigate_right() {
   m_i_selected = m_i_selected == N_ITEMS - 1 ? 0 : m_i_selected + 1;
 }
 
-bool Menu::is_selected(size_t i) {
-  return m_i_selected == i;
-}
-
-bool Menu::is_quit_selected() {
-  return m_i_selected == Menu::N_ITEMS - 1;
+MenuItem Menu::get_selected() {
+  return static_cast<MenuItem>(m_i_selected);
 }
 
 void Menu::draw_border(WINDOW* window, ColorPair color_pair) {
