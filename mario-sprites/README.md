@@ -1,3 +1,6 @@
+# Description
+Animated Mario sprite rendered on the terminal with ncurses.
+
 # How to build & run
 ```terminal
 $ make -j
@@ -8,7 +11,7 @@ $ ./build/main
 - ncurses.
 
 # Screenshot
-![Screenshot](/screenshots/screenshot.png)
+![Screenshot](screenshots/screenshot.png)
 
 # Platforms
 Tested on:
@@ -26,7 +29,7 @@ Mario: [mariouniverse.com][mario]
 # Documentation
 ## Packages
 These packages can be installed with `apt install` (in addition to ncurses):
-- `ncurses-example`: /usr/libexec/ncurses-examples/ (source code can be downloaded with `apt-file show ncurses` and found in <ncurses-dir>/`test` folder)
+- `ncurses-example`: /usr/libexec/ncurses-examples/ (source code for ncurses can be downloaded with `apt-get source ncurses`, then examples can be found in <ncurses-dir>/`test` folder)
 - `ncurses-doc`: /usr/share/doc/ncurses-doc/html/index.html
 
 ## Concepts
