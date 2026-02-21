@@ -1,7 +1,9 @@
+#include <ctime>
 #include <ncurses.h>
 
 #include "ncurses-utils/ncurses_utils.hpp"
 #include "clock.hpp"
+#include "time.hpp"
 
 int main() {
   //////////////////////////////////////////////////
@@ -35,7 +37,9 @@ int main() {
   bool is_quitting = false;
 
   while (!is_quitting) {
-    clock.draw(window_clock);
+    werase(window_clock);
+    auto [ hours, minutes ] = Time::get_current();
+    clock.draw(window_clock, hours, minutes);
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);

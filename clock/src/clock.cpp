@@ -29,14 +29,29 @@ std::vector<Digit> Clock::get_digits() {
   return digits;
 }
 
-void Clock::draw(WINDOW* window) {
-  for (size_t i = 0; i <= N_DIGITS; ++i) {
-    const Digit& digit = m_digits[i];
-    int row_offset = 0;
-    int col_offset = i * Digit::WIDTH_DIGIT;
+void Clock::draw(WINDOW* window, int hours, int minutes) {
+  auto [ i_tens_hours, i_units_hours ] = get_digits_indexes(hours);
+  auto [ i_tens_minutes, i_units_minutes ] = get_digits_indexes(minutes);
 
-    digit.draw(window, row_offset, col_offset);
-  }
+  draw_tens_and_units(window, i_tens_hours, i_units_hours, false);
+  draw_tens_and_units(window, i_tens_minutes, i_units_minutes, true);
 
   wrefresh(window);
+}
+
+/* Draws two digits for hours (hh) or minutes (mm) (accord. to is_minutes) */
+void Clock::draw_tens_and_units(WINDOW* window, size_t i_tens, size_t i_units, bool is_minutes) {
+  const Digit& digit_tens = m_digits[i_tens];
+  const Digit& digit_units = m_digits[i_units];
+  int row_offset = is_minutes ? 2 * Digit::WIDTH_DIGIT : 0;
+
+  digit_tens.draw(window, 0, row_offset);
+  digit_units.draw(window, 0, row_offset + Digit::WIDTH_DIGIT);
+}
+
+/* @param x Hours or minutes */
+std::pair<unsigned int, unsigned int> Clock::get_digits_indexes(unsigned int x) {
+  int i_tens = x / 10;
+  int i_units = x % 10;
+  return std::make_pair(i_tens, i_units);
 }

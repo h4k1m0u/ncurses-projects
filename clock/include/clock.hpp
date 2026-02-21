@@ -10,7 +10,7 @@ class Clock {
 public:
   Clock(int rows, int cols);
   WINDOW* create_window();
-  void draw(WINDOW* window);
+  void draw(WINDOW* window, int hours, int minutes);
 
 private:
   int m_x;
@@ -23,6 +23,8 @@ private:
   static constexpr size_t N_DIGITS = 10;
 
   std::vector<Digit> get_digits();
+  void draw_tens_and_units(WINDOW* window, size_t i_tens, size_t i_units, bool is_minutes);
+  std::pair<unsigned int, unsigned int> get_digits_indexes(unsigned int x);
 };
 
 #endif // CLOCK_HPP
