@@ -1,36 +1,56 @@
 #include <ncurses.h>
-#include <vector>
 
-#include "digit.hpp"
-// #include "ncurses-utils/ncurses_utils.hpp"
+#include "ncurses-utils/ncurses_utils.hpp"
+#include "clock.hpp"
 
 int main() {
   //////////////////////////////////////////////////
   // Init ncurses
   //////////////////////////////////////////////////
 
-  // auto [ rows, cols ] = NcursesUtils::init();
+  auto [ rows, cols ] = NcursesUtils::init();
+
+
+  //////////////////////////////////////////////////
+  // Windows
+  //////////////////////////////////////////////////
+
+  // load digits from images
+  Clock clock(rows, cols);
+  WINDOW* window_clock = clock.create_window();
 
 
   //////////////////////////////////////////////////
   // Configure input
   //////////////////////////////////////////////////
 
-  // NcursesUtils::configure_input(window_menu);
+  NcursesUtils::configure_input(window_clock);
 
 
   //////////////////////////////////////////////////
-  // Load digits
+  // Main loop
   //////////////////////////////////////////////////
 
-  constexpr size_t N_DIGITS = 10;
-  std::vector<Glyph> glyphs_map(N_DIGITS);
+  int c = 0;
+  bool is_quitting = false;
 
-  for (size_t i = 0; i < N_DIGITS; ++i) {
-    std::string path_image = "images/" + std::to_string(i) + ".png";
-    Digit image_digit(path_image);
-    glyphs_map[i] = image_digit.glyph;
+  while (!is_quitting) {
+    clock.draw(window_clock);
+
+    // wait for key press (automatically calls refresh())
+    // wrefresh(win);
+    c = wgetch(window_clock);
+
+    if (c == 'q' || c == 'Q')
+      is_quitting = true;
+
+    // sleep for 50ms (cap fps at ~ 20)
+    // napms(16); // fps ~ 60
+    napms(50);
   }
+
+  delwin(window_clock);
+  endwin();
 
   return 0;
 }

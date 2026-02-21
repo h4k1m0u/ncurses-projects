@@ -17,7 +17,7 @@ private:
   int m_rows;
   int m_cols;
 
-  /* cchar_t used to hold C wide-characters, wchar_t (to store unicode, e.g. emojis) */
+  /* cchar_t used to hold C wide-characters for n-curses (unicode constants like emojis stored in wchar_t) */
   cchar_t m_block_full;
   cchar_t m_block_dark_shade;
   cchar_t m_block_medium_shade;
