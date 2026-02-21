@@ -38,8 +38,8 @@ int main() {
 
   while (!is_quitting) {
     werase(window_clock);
-    auto [ hours, minutes ] = Time::get_current();
-    clock.draw(window_clock, hours, minutes);
+    Time::HHMMSS triplet_time = Time::get_current();
+    clock.draw(window_clock, triplet_time);
 
     // wait for key press (automatically calls refresh())
     // wrefresh(win);

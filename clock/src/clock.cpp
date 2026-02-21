@@ -1,39 +1,44 @@
 #include "clock.hpp"
-#include "digit.hpp"
+#include "character.hpp"
 
 Clock::Clock(int rows, int cols):
-  m_x(0),
-  m_y(0),
-  m_rows(rows),
-  m_cols(cols),
+  // padding between tens & units for both hours & minutes
+  m_rows(Image::HEIGHT),
+  m_cols(5 * Image::HEIGHT + 2 * PADDING),
+  m_x(cols / 2 - m_cols / 2),
+  m_y(rows / 2 - m_rows / 2),
 
-  m_digits(get_digits())
+  m_digits(get_digits()),
+  m_colon("images/colon.png")
 {
 }
 
 WINDOW* Clock::create_window() {
-  WINDOW* win = newwin(0, 0, 0, 0);
+  WINDOW* win = newwin(m_rows, m_cols, m_y, m_x);
 
   return win;
 }
 
-std::vector<Digit> Clock::get_digits() {
-  constexpr size_t N_DIGITS = 10;
-  std::vector<Digit> digits(N_DIGITS);
+std::vector<Character> Clock::get_digits() {
+  std::vector<Character> digits(N_DIGITS);
 
   for (size_t i = 0; i < N_DIGITS; ++i) {
     std::string path_image = "images/" + std::to_string(i) + ".png";
-    digits[i] = Digit(path_image);
+    digits[i] = Character(path_image);
   }
 
   return digits;
 }
 
-void Clock::draw(WINDOW* window, int hours, int minutes) {
+/* two digits for minutes + colon + two digits for minutes */
+void Clock::draw(WINDOW* window, const Time::HHMMSS& time) {
+  auto [ hours, minutes, seconds ] = time;
   auto [ i_tens_hours, i_units_hours ] = get_digits_indexes(hours);
   auto [ i_tens_minutes, i_units_minutes ] = get_digits_indexes(minutes);
 
   draw_tens_and_units(window, i_tens_hours, i_units_hours, false);
+  if (seconds % 2 == 0)
+    m_colon.draw(window, 0, 2 * Image::WIDTH + PADDING);
   draw_tens_and_units(window, i_tens_minutes, i_units_minutes, true);
 
   wrefresh(window);
@@ -41,12 +46,18 @@ void Clock::draw(WINDOW* window, int hours, int minutes) {
 
 /* Draws two digits for hours (hh) or minutes (mm) (accord. to is_minutes) */
 void Clock::draw_tens_and_units(WINDOW* window, size_t i_tens, size_t i_units, bool is_minutes) {
-  const Digit& digit_tens = m_digits[i_tens];
-  const Digit& digit_units = m_digits[i_units];
-  int row_offset = is_minutes ? 2 * Digit::WIDTH_DIGIT : 0;
+  const Character& digit_tens = m_digits[i_tens];
+  const Character& digit_units = m_digits[i_units];
 
-  digit_tens.draw(window, 0, row_offset);
-  digit_units.draw(window, 0, row_offset + Digit::WIDTH_DIGIT);
+  int col_offset_tens = is_minutes ? 3 * Image::WIDTH : 0;
+  int col_offset_units = is_minutes ? 4 * Image::WIDTH : Image::WIDTH;
+
+  // separate units from tens for both hours & minutes (due to font)
+  int padding_tens = is_minutes ? PADDING : 0;
+  int padding_units = is_minutes ? 2 * PADDING : PADDING;
+
+  digit_tens.draw(window, 0, col_offset_tens + padding_tens);
+  digit_units.draw(window, 0, col_offset_units + padding_units);
 }
 
 /* @param x Hours or minutes */

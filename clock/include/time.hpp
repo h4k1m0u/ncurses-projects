@@ -1,10 +1,11 @@
 #ifndef TIME_HPP
 #define TIME_HPP
 
-#include <utility>
+#include <tuple>
 
 namespace Time {
-  std::pair<unsigned int, unsigned int> get_current();
+  using HHMMSS = std::tuple<unsigned int, unsigned int, unsigned int>;
+  HHMMSS get_current();
 }
 
 #endif
