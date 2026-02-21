@@ -2,13 +2,23 @@
 Animated Mario sprite rendered on the terminal with ncurses.
 
 # How to build & run
+First build ncurses-utils:
+
+```terminal
+$ cd ../ncurses-utils
+$ make -j
+$ sudo make install
+```
+
+Then build the current repo:
+
 ```terminal
 $ make -j
 $ ./build/main
 ```
 
 # Prerequisites
-- ncurses.
+- ncursesw (ncurses with wide-character support to render UTF8 characters).
 
 # Screenshot
 ![Screenshot](screenshots/screenshot.png)

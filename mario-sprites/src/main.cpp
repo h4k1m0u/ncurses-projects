@@ -7,6 +7,8 @@
 #include "mario.hpp"
 #include "menu_item.hpp"
 
+#include "ncurses-utils/ncurses_utils.hpp"
+
 using namespace Colors;
 
 size_t i_selected = 0;
@@ -16,22 +18,12 @@ int main() {
   // Init ncurses
   //////////////////////////////////////////////////
 
-  // set locale to utf-8 to support unicode characters to print frame border (otherwise prints gibberish)
-  setlocale(LC_ALL, "");
+  auto [ rows, cols ] = NcursesUtils::init();
 
-  // initialize ncurses
-  initscr();
 
-  // enable colors
-  start_color();
-
-  // assign default terminal's fg/bg colors to color=-1 in init_pair()
-  use_default_colors();
-
-  // # of lines & cols for entire terminal
-  int rows, cols;
-  getmaxyx(stdscr, rows, cols);
-  // printf("# lines: %d, # cols: %d\n", rows, cols);
+  //////////////////////////////////////////////////
+  // Windows
+  //////////////////////////////////////////////////
 
   // frame borders surround terminal
   Frame frame(rows, cols);
@@ -49,21 +41,12 @@ int main() {
   Mario mario(rows, cols);
   WINDOW* window_mario = mario.create_window();
 
-  // get typed character (by getch()) without waiting for '\n'
-  cbreak();
 
-  // allows to detect the arrow-key pressed (in getch)
-  // keypad(stdscr, TRUE);
-  keypad(window_menu, TRUE);
+  //////////////////////////////////////////////////
+  // Configure input
+  //////////////////////////////////////////////////
 
-  // prevent character read by getch() from being printed on stdout
-  noecho();
-
-  // sets the cursor state to invisible
-  curs_set(0);
-
-  // set getch() to be non-blocking (to animate mario)
-  nodelay(window_menu, TRUE);
+  NcursesUtils::configure_input(window_menu);
 
 
   //////////////////////////////////////////////////
