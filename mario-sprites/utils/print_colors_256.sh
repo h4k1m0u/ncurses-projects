@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 usage() {
   cat << HEREDOC
-Print shell's palette of 256 colors
 USAGE: $0 [-n] [-b] [-t TEXT] [-d DELIMITER]
+Print shell's palette of 256 colors
 Text: to print for each color
 Delimiter: to print between each text
 -n: Set text to a color index for each color
@@ -42,7 +42,8 @@ done
 shift $(( OPTIND - 1 ))
 
 if [[ "$print_indexes" -ne 0 && -z "$text" ]]; then
-  echo "Text not set"
+  echo "Error: Text not set"
+  usage
   exit 1
 fi
 

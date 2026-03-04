@@ -21,6 +21,7 @@ private:
   std::vector<Character> m_digits;
   Character m_colon;
 
+  static constexpr size_t N_CHARACTERS = 5;
   static constexpr size_t N_DIGITS = 10;
   static constexpr int PADDING = 1;
 

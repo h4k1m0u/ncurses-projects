@@ -3,8 +3,8 @@
 
 Clock::Clock(int rows, int cols):
   // padding between tens & units for both hours & minutes
-  m_rows(Image::HEIGHT),
-  m_cols(5 * Image::HEIGHT + 2 * PADDING),
+  m_rows(Character::HEIGHT),
+  m_cols(N_CHARACTERS * Character::HEIGHT + 2 * PADDING),
   m_x(cols / 2 - m_cols / 2),
   m_y(rows / 2 - m_rows / 2),
 
@@ -38,7 +38,7 @@ void Clock::draw(WINDOW* window, const Time::HHMMSS& time) {
 
   draw_tens_and_units(window, i_tens_hours, i_units_hours, false);
   if (seconds % 2 == 0)
-    m_colon.draw(window, 0, 2 * Image::WIDTH + PADDING);
+    m_colon.draw(window, 0, 2 * Character::WIDTH + PADDING);
   draw_tens_and_units(window, i_tens_minutes, i_units_minutes, true);
 
   wrefresh(window);
@@ -49,8 +49,8 @@ void Clock::draw_tens_and_units(WINDOW* window, size_t i_tens, size_t i_units, b
   const Character& digit_tens = m_digits[i_tens];
   const Character& digit_units = m_digits[i_units];
 
-  int col_offset_tens = is_minutes ? 3 * Image::WIDTH : 0;
-  int col_offset_units = is_minutes ? 4 * Image::WIDTH : Image::WIDTH;
+  int col_offset_tens = is_minutes ? 3 * Character::WIDTH : 0;
+  int col_offset_units = is_minutes ? 4 * Character::WIDTH : Character::WIDTH;
 
   // separate units from tens for both hours & minutes (due to font)
   int padding_tens = is_minutes ? PADDING : 0;

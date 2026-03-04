@@ -1,7 +1,7 @@
 #include <ctime>
 #include <ncurses.h>
 
-#include "ncurses-utils/ncurses_utils.hpp"
+#include <ncurses-utils/ncurses_utils.hpp>
 #include "clock.hpp"
 #include "time.hpp"
 

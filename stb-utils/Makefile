@@ -1,4 +1,4 @@
-LIBRARY_NAME := ncurses-utils
+LIBRARY_NAME := stb-utils
 PREFIX := /usr/local
 INCLUDE_DEST_DIR := $(PREFIX)/include/$(LIBRARY_NAME)
 LIBRARY_DEST_DIR := $(PREFIX)/lib
@@ -36,7 +36,7 @@ clean:
 # install & uninstall targets make it easy to link against this lib
 install:
 	mkdir -p $(INCLUDE_DEST_DIR)
-	cp -t $(INCLUDE_DEST_DIR) $(INCLUDE_DIR)/*.hpp
+	cp -t $(INCLUDE_DEST_DIR) $(INCLUDE_DIR)/*.hpp $(INCLUDE_DIR)/*.h
 	cp -t $(LIBRARY_DEST_DIR) $(LIBRARY_FILE)
 
 uninstall:

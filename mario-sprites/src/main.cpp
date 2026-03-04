@@ -7,7 +7,7 @@
 #include "mario.hpp"
 #include "menu_item.hpp"
 
-#include "ncurses-utils/ncurses_utils.hpp"
+#include <ncurses-utils/ncurses_utils.hpp>
 
 using namespace Colors;
 
