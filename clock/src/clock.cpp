@@ -1,5 +1,4 @@
 #include "clock.hpp"
-#include "character.hpp"
 
 Clock::Clock(int rows, int cols):
   // padding between tens & units for both hours & minutes

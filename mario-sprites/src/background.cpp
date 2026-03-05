@@ -1,10 +1,11 @@
 #include "background.hpp"
 #include "colors.hpp"
 #include "menu.hpp"
-#include "symbols.hpp"
 #include "frame.hpp"
 #include <ncurses.h>
 #include <stdexcept>
+
+#include <ncurses-utils/symbols.hpp>
 
 Background::Background(int rows, int cols):
   // ignore frame above/below & left/right

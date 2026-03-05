@@ -1,9 +1,10 @@
 #include "mario.hpp"
 #include "menu.hpp"
 #include "background.hpp"
-#include "symbols.hpp"
 #include "frame.hpp"
 #include "sprite.hpp"
+
+#include <ncurses-utils/symbols.hpp>
 
 using namespace Sprite;
 

@@ -2,7 +2,15 @@
 Digital clock rendered on the terminal with ncurses.
 
 # How to build & run
-First build & install ncurses-utils:
+First build & install stb-utils:
+
+```terminal
+$ cd ../stb-utils
+$ make -j
+$ sudo make install
+```
+
+Then, build & install ncurses-utils:
 
 ```terminal
 $ cd ../ncurses-utils

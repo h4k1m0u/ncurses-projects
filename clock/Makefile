@@ -16,7 +16,7 @@ IMAGES_DEST_FILES := $(IMAGES_SRC_FILES:$(IMAGES_SRC_DIR)/%.png=$(IMAGES_DEST_DI
 # _XOPEN_SOURCE_EXTENDED macro defined to make ncursesw functions work on termux/Android
 CPPFLAGS := -I$(INCLUDE_DIR) -D_XOPEN_SOURCE_EXTENDED
 CXXFLAGS := -std=c++20 -Wall -Wextra -Werror -MMD
-LDFLAGS := -lstb-utils -lncurses-utils -lncursesw
+LDFLAGS := -lncurses-utils -lstb-utils -lncursesw
 
 $(BUILD_DIR)/main: $(OBJECTS_FILES)
 	$(CXX) $^ -o$@ $(LDFLAGS)

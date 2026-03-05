@@ -1,5 +1,6 @@
 #include "frame.hpp"
-#include "symbols.hpp"
+
+#include <ncurses-utils/symbols.hpp>
 
 Frame::Frame(int rows, int cols):
   m_rows(rows),

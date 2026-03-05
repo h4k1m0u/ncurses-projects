@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <iostream>
 
 #include "image.hpp"
 
@@ -7,8 +6,10 @@
 #include "stb_image.h"
 
 Image::Image(const std::string& path_image):
-  m_data(get_data(path_image))
+  m_data(get_data(path_image)),
+  grid(get_grid())
 {
+  free();
 }
 
 unsigned char* Image::get_data(const std::string& path_image) {
@@ -22,10 +23,10 @@ unsigned char* Image::get_data(const std::string& path_image) {
   return data;
 }
 
-ImageData Image::get_glyph() {
+ImageGrid Image::get_grid() {
   ImagePixel pixel(n_channels);
   ImageRow row(width, pixel);
-  ImageData glyph(height, row);
+  ImageGrid grid(height, row);
 
   for (int row = 0; row < height; ++row) {
     for (int col = 0; col < width; ++col) {
@@ -33,12 +34,12 @@ ImageData Image::get_glyph() {
         int i = n_channels * (row * width + col) + n;
         unsigned char value = m_data[i];
 
-        glyph[row][col][n] = value;
+        grid[row][col][n] = value;
       }
     }
   }
 
-  return glyph;
+  return grid;
 }
 
 void Image::free() {

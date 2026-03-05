@@ -7,22 +7,25 @@
 // row-by-row
 using ImagePixel = std::vector<unsigned char>;
 using ImageRow = std::vector<ImagePixel>;
-using ImageData = std::vector<ImageRow>;
+using ImageGrid = std::vector<ImageRow>;
 
 /* Wrapper around stb-image */
 struct Image {
+private:
+  unsigned char* m_data;
+
+  unsigned char* get_data(const std::string& path_image);
+  void free();
+
 public:
   int width;
   int height;
   int n_channels;
+  ImageGrid grid;
 
+  Image() = default;
   Image(const std::string& path_image);
-  unsigned char* get_data(const std::string& path_image);
-  ImageData get_glyph();
-  void free();
-
-private:
-  unsigned char* m_data;
+  ImageGrid get_grid();
 };
 
 #endif // IMAGE_HPP
