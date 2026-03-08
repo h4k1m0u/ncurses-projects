@@ -6,19 +6,20 @@
 
 #include "color.hpp"
 
+using ColorIndex = unsigned char;
+
 /* Load platte of colors from /usr/share/ncurses-examples/xterm-256color.dat */
 class Palette {
 public:
-  Palette();
-  void find_closest_color(const Color& color);
+  Palette() = default;
+  void load_colors();
+  ColorIndex find_index_closest_color(const Color& color) const;
 
 private:
   static constexpr int N_COLORS = 256;
   inline static const std::string PATH_PALETTE = "/usr/share/ncurses-examples/xterm-256color.dat";
 
   std::vector<Color> m_colors;
-
-  std::vector<Color> load_colors();
 
   unsigned char extract_number(const std::string& line, size_t& i);
   void skip_non_digits(const std::string& line, size_t& i);
