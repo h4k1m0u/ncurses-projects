@@ -1,17 +1,18 @@
-#ifndef MARIO_HPP
-#define MARIO_HPP
+#ifndef BIRD_HPP
+#define BIRD_HPP
 
 #include <ncurses.h>
 
 #include <ncurses-utils/palette.hpp>
 #include <ncurses-utils/sprite.hpp>
 
-class Flame {
+class Bird {
 public:
-  static constexpr int WIDTH = 96;
-  static constexpr int HEIGHT = 96;
+  static constexpr int WIDTH = 32;
+  static constexpr int HEIGHT = 32;
+  static constexpr int N_SPRITES = 5;
 
-  Flame(int rows, int cols, const Palette& palette);
+  Bird(int rows, int cols, const Palette& palette);
   WINDOW* create_window();
   void draw(WINDOW* window, int frame_index);
 
@@ -23,7 +24,9 @@ private:
   int m_y;
 
   // pertaining to the sprite
-  Sprite m_sprite;
+  std::vector<Sprite> m_sprites;
+
+  std::vector<Sprite> get_sprites(const Palette& palette);
 };
 
 #endif

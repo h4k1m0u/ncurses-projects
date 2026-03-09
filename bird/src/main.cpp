@@ -4,7 +4,7 @@
 #include <ncurses-utils/ncurses_utils.hpp>
 #include <ncurses-utils/palette.hpp>
 
-#include "flame.hpp"
+#include "bird.hpp"
 
 int main() {
   //////////////////////////////////////////////////
@@ -28,12 +28,14 @@ int main() {
   NcursesUtils::configure_input(window);
 
 
-  /////
+  //////////////////////////////////////////////////
+  // Load colors from sprites
+  //////////////////////////////////////////////////
+
   Palette palette;
   palette.load_colors();
 
-  Flame flame(rows, cols, palette);
-  /////
+  Bird bird(rows, cols, palette);
 
 
   //////////////////////////////////////////////////
@@ -42,6 +44,7 @@ int main() {
 
   int c = 0;
   bool is_quitting = false;
+  int frame_index = 0;
 
   while (!is_quitting) {
 
@@ -49,14 +52,15 @@ int main() {
     // wrefresh(win);
     c = wgetch(window);
 
-    flame.draw(window, 0);
+    bird.draw(window, frame_index++);
 
     if (c == 'q' || c == 'Q')
       is_quitting = true;
 
     // sleep for 50ms (cap fps at ~ 20)
     // napms(16); // fps ~ 60
-    napms(50);
+    // napms(50);
+    napms(100); // fps = 10
   }
 
   delwin(window);

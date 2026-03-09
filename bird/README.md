@@ -1,5 +1,5 @@
 # Description
-Animated flame (4 frames) rendered on the terminal with ncurses.
+Animated bird (4 frames) rendered on the terminal with ncurses.
 
 # How to build & run
 First build & install stb-utils:
@@ -38,9 +38,9 @@ $ sudo apt install ncurses-example
 ![Screenshot](screenshots/screenshot.png)
 
 # Assets
-- [Flame][flame]: 96x96px.
+- [Bird][bird]: 32x32px.
 
-[flame]: https://bdragon1727.itch.io/free-effect-bullet-impact-explosion-32x32
+[bird]: https://opengameart.org/content/animated-birds-32x32
 
 # Inspiration
 Download the source code for ncurses examples (look for this example: `<ncurses-dir>/test/picsmap.c`):
@@ -49,5 +49,5 @@ $ apt-get source ncurses
 ```
 
 # Rationale
-- Export RGB frames images from gimp in `png` format (read with `stb-image`).
+- Export RGB frames images from gimp in `png` format (read with `stb-image`) & without transparency channel.
 - Euclidean distance used to determine the closest palette color, the same way as in the function `map_color()` in `<ncurses-dir>/test/picsmap.c`.

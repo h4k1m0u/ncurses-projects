@@ -80,10 +80,16 @@ PairsMap Sprite::get_pairs_map() {
 
 /* x & y are coords of upper-left corner */
 void Sprite::draw(WINDOW* window, int row_offset, int col_offset) {
+  // white background is transparent
+  constexpr ColorInt WHITE = 0xffffff;
+
   for (int row = 0; row < m_image.height; ++row) {
     for (int col = 0; col < m_image.width; ++col) {
       ColorInt color_int = m_colors_grid[row][col];
       Pair pair = m_pairs_map[color_int];
+
+      if (color_int == WHITE)
+        continue;
 
       // draw box in given color
       wattr_on(window, COLOR_PAIR(pair), NULL);
