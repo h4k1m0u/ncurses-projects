@@ -2,12 +2,8 @@
 #define IMAGE_HPP
 
 #include <string>
-#include <vector>
 
-// row-by-row
-using ImagePixel = std::vector<unsigned char>;
-using ImageRow = std::vector<ImagePixel>;
-using ImageGrid = std::vector<ImageRow>;
+#include "types.hpp"
 
 /* Wrapper around stb-image */
 struct Image {
@@ -25,7 +21,9 @@ public:
 
   Image() = default;
   Image(const std::string& path_image);
+
   ImageGrid get_grid();
+  ColorsGrid get_colors_grid();
 };
 
 #endif // IMAGE_HPP

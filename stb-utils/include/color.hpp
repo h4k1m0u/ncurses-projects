@@ -3,7 +3,7 @@
 
 #include <vector>
 
-using ColorInt = unsigned int;
+#include "types.hpp"
 
 struct Color {
   unsigned char red;

@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "color.hpp"
+#include <stb-utils/color.hpp>
 
-using ColorIndex = unsigned char;
+#include "types.hpp"
 
 /* Load platte of colors from /usr/share/ncurses-examples/xterm-256color.dat */
 class Palette {

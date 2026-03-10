@@ -22,7 +22,8 @@ Then build the current repo:
 
 ```terminal
 $ make -j
-$ ./build/main
+$ ./build/main images/bird/*.png
+$ ./build/main images/flame/*.png
 ```
 
 # Prerequisites
@@ -39,8 +40,10 @@ $ sudo apt install ncurses-example
 
 # Assets
 - [Bird][bird]: 32x32px.
+- [Flame][flame]: 32x32px
 
 [bird]: https://opengameart.org/content/animated-birds-32x32
+[flame]: https://bdragon1727.itch.io/free-effect-bullet-impact-explosion-32x32
 
 # Inspiration
 Download the source code for ncurses examples (look for this example: `<ncurses-dir>/test/picsmap.c`):

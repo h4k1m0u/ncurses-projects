@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "image.hpp"
+#include "color.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -42,6 +43,31 @@ ImageGrid Image::get_grid() {
   return grid;
 }
 
+ColorsGrid Image::get_colors_grid() {
+  ColorsGrid colors_grid(height);
+
+  for (int row = 0; row < height; ++row) {
+    ColorsRow colors_row(width);
+
+    for (int col = 0; col < width; ++col) {
+      ImagePixel pixel(n_channels);
+
+      for (int channel = 0; channel < n_channels; ++channel) {
+        unsigned char component = grid[row][col][channel];
+        pixel[channel] = component;
+      } // END CHANNELS
+
+      Color color(pixel);
+      colors_row[col] = color.to_hex();
+    } // END COLS
+
+    colors_grid[row] = colors_row;
+  } // END ROWS
+
+  return colors_grid;
+}
+
 void Image::free() {
   stbi_image_free(m_data);
+  m_data = nullptr;
 }
