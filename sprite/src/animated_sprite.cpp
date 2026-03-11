@@ -19,7 +19,7 @@ WINDOW* AnimatedSprite::create_window() {
   return win;
 }
 
-void AnimatedSprite::draw(WINDOW* window, PairsMap pairs_map, int frame_index) {
+void AnimatedSprite::draw(WINDOW* window, const PairsMap& pairs_map, int frame_index) {
   werase(window);
 
   size_t n_sprites = m_sprites.size();

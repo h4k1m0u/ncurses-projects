@@ -8,9 +8,6 @@ OBJECTS_FILES := $(SRC_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS_FILES := $(OBJECTS_FILES:.o=.d)
 
 IMAGES_SRC_DIR := images
-IMAGES_SRC_FILES := $(shell find $(IMAGES_SRC_DIR)/*.png)
-IMAGES_DEST_DIR := $(BUILD_DIR)/images
-IMAGES_DEST_FILES := $(IMAGES_SRC_FILES:$(IMAGES_SRC_DIR)/%.png=$(IMAGES_DEST_DIR)/%.png)
 
 # link against ncursesw to support wide-characters (unicode)
 # _XOPEN_SOURCE_EXTENDED macro defined to make ncursesw functions work on termux/Android
@@ -33,11 +30,5 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 
-# Copy modified images only to build folder
-images: $(IMAGES_DEST_FILES)
-
-$(IMAGES_DEST_DIR)/%.png: $(IMAGES_SRC_DIR)/%.png | $(IMAGES_DEST_DIR)
-	cp $< $@
-
-$(IMAGES_DEST_DIR):
-	mkdir -p $@
+images: | $(BUILD_DIR)
+	cp -r $(IMAGES_SRC_DIR) $(BUILD_DIR)

@@ -9,7 +9,7 @@ class AnimatedSprite {
 public:
   AnimatedSprite(int rows, int cols, const std::vector<Sprite>& sprites);
   WINDOW* create_window();
-  void draw(WINDOW* window, PairsMap pairs_map, int frame_index);
+  void draw(WINDOW* window, const PairsMap& pairs_map, int frame_index);
 
 private:
   // pertaining to the window
