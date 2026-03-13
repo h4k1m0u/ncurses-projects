@@ -21,7 +21,7 @@ $ ./build/main
 - ncursesw (ncurses with wide-character support to render UTF8 characters).
 
 # Screenshot
-![Screenshot](screenshots/screenshot.png)
+![Screenshot](screenshots/screenshot.gif)
 
 # Platforms
 Tested on:

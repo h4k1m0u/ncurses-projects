@@ -36,7 +36,8 @@ $ sudo apt install ncurses-example
 [palette]: https://manpages.debian.org/bullseye/xterm/xterm.1.en.html#color0
 
 # Screenshot
-![Screenshot](screenshots/screenshot.png)
+![Screenshot-bird](screenshots/screenshot-bird.gif)
+![Screenshot-flame](screenshots/screenshot-flame.gif)
 
 # Assets
 - [Bird][bird]: 32x32px.

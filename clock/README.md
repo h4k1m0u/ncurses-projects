@@ -29,7 +29,7 @@ $ ./build/main
 - ncursesw (ncurses with wide-character support to render UTF8 characters).
 
 # Screenshot
-![Screenshot](screenshots/screenshot.png)
+![Screenshot](screenshots/screenshot.gif)
 
 # Resources
 - [Font Casio fx-7800GC][font]: Copied to `~/.config/GIMP/2.10/fonts` then digitized manually pixel by pixel.
