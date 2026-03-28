@@ -8,7 +8,7 @@
 
 #include "types.hpp"
 
-/* Load platte of colors from /usr/share/ncurses-examples/xterm-256color.dat */
+/* Load palette of colors from /usr/local/share/ncurses-utils/xterm-256color.dat */
 class Palette {
 public:
   Palette() = default;
@@ -17,7 +17,7 @@ public:
 
 private:
   static constexpr int N_COLORS = 256;
-  inline static const std::string PATH_PALETTE = "/usr/share/ncurses-examples/xterm-256color.dat";
+  inline static const std::string PATH_PALETTE = "/usr/local/share/ncurses-utils/xterm-256color.dat";
 
   std::vector<Color> m_colors;
 
