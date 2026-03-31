@@ -1,4 +1,4 @@
-#include <ncurses.h>
+#include <iostream>
 #include <stdexcept>
 
 #include <ncurses-utils/ncurses_utils.hpp>
@@ -9,8 +9,6 @@
 #include "time.hpp"
 #include "constants.hpp"
 
-using namespace Constants;
-
 /**
  * Create sprite from given image path &
  * find ncurses color indexes closest to its colors
@@ -18,7 +16,8 @@ using namespace Constants;
 static Sprite create_sprite(const std::string& path_image, const Palette& palette, Pairs& pairs) {
   Image image(path_image);
 
-  if (image.n_channels != N_CHANNELS || image.width != WIDTH || image.height != HEIGHT) {
+  if (image.n_channels != Constants::N_CHANNELS || image.width != Constants::WIDTH || image.height != Constants::HEIGHT) {
+    endwin();
     throw std::runtime_error("Invalid image (wrong size or # of channels)");
   }
 
@@ -36,6 +35,12 @@ int main() {
 
   auto [ rows, cols ] = NcursesUtils::init();
 
+  if (rows < Clock::HEIGHT || cols < Clock::WIDTH) {
+    endwin();
+    std::cout << "Terminal not big enough" << '\n';
+    return 0;
+  }
+
 
   //////////////////////////////////////////////////
   // Load palette of 256 colors
@@ -50,9 +55,9 @@ int main() {
   //////////////////////////////////////////////////
 
   Pairs pairs;
-  std::array<Sprite, N_DIGITS> digits;
+  std::array<Sprite, Constants::N_DIGITS> digits;
 
-  for (int i = 0; i < N_DIGITS; ++i) {
+  for (int i = 0; i < Constants::N_DIGITS; ++i) {
     std::string path_image = "images/" + std::to_string(i) + ".png";
     digits[i] = create_sprite(path_image, palette, pairs);
   }

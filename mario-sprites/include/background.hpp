@@ -11,10 +11,11 @@
 class Background {
 public:
   static constexpr int HEIGHT_GRASS = 6;
+  static constexpr int HEIGHT_STARS_ROW = 1;
 
   Background(int rows, int cols);
   WINDOW* create_window();
-  void draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_stars);
+  void draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass);
 
 private:
   static constexpr int MAX_N_STARS_ROW = 10;
@@ -33,8 +34,7 @@ private:
   std::array<cchar_t, 4> m_stars;
 
   void draw_grass(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass);
-  void draw_stars(WINDOW* window, const std::vector<ColorPair>& colors_pairs_stars);
-  void draw_stars_row(WINDOW* window, int row);
+  void draw_stars_row(WINDOW* window);
 };
 
 #endif

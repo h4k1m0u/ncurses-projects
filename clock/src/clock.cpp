@@ -1,14 +1,8 @@
 #include "clock.hpp"
-#include "constants.hpp"
-
-using namespace Constants;
 
 Clock::Clock(int rows, int cols, const Digits& digits, const Sprite& colon):
-  // padding between tens & units for both hours & minutes
-  m_rows(HEIGHT),
-  m_cols(N_CHARACTERS * HEIGHT + 2 * PADDING),
-  m_x(cols / 2 - m_cols / 2),
-  m_y(rows / 2 - m_rows / 2),
+  m_x(cols / 2 - WIDTH / 2),
+  m_y(rows / 2 - HEIGHT / 2),
 
   m_digits(digits),
   m_colon(colon)
@@ -16,7 +10,7 @@ Clock::Clock(int rows, int cols, const Digits& digits, const Sprite& colon):
 }
 
 WINDOW* Clock::create_window() {
-  WINDOW* win = newwin(m_rows, m_cols, m_y, m_x);
+  WINDOW* win = newwin(HEIGHT, WIDTH, m_y, m_x);
 
   return win;
 }
@@ -31,7 +25,7 @@ void Clock::draw(WINDOW* window, const Time::HHMMSS& time, const PairsMap& pairs
 
   draw_tens_and_units(window, i_tens_hours, i_units_hours, false, pairs_map);
   if (seconds % 2 == 0)
-    m_colon.draw(window, 0, 2 * WIDTH + PADDING, pairs_map);
+    m_colon.draw(window, 0, 2 * Constants::WIDTH + PADDING, pairs_map);
   draw_tens_and_units(window, i_tens_minutes, i_units_minutes, true, pairs_map);
 
   wrefresh(window);
@@ -42,8 +36,8 @@ void Clock::draw_tens_and_units(WINDOW* window, size_t i_tens, size_t i_units, b
   const Sprite& digit_tens = m_digits[i_tens];
   const Sprite& digit_units = m_digits[i_units];
 
-  int col_offset_tens = is_minutes ? 3 * WIDTH : 0;
-  int col_offset_units = is_minutes ? 4 * WIDTH : WIDTH;
+  int col_offset_tens = is_minutes ? 3 * Constants::WIDTH : 0;
+  int col_offset_units = is_minutes ? 4 * Constants::WIDTH : Constants::WIDTH;
 
   // separate units from tens for both hours & minutes (due to font)
   int padding_tens = is_minutes ? PADDING : 0;

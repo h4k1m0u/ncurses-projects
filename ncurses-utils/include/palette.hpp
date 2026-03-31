@@ -8,7 +8,11 @@
 
 #include "types.hpp"
 
-/* Load palette of colors from /usr/local/share/ncurses-utils/xterm-256color.dat */
+/**
+ * Load palette of colors from "/usr/local/share/ncurses-utils/xterm-256color.dat"
+ * Palette downloaded from ncurses source code to "<ncurses-utils>/colors/xterm-256.dat"
+ * `make install` used to copy palette file to "/usr/local/share/ncurses-utils/"
+ */
 class Palette {
 public:
   Palette() = default;

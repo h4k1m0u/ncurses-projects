@@ -31,18 +31,19 @@ Background::Background(int rows, int cols):
 }
 
 WINDOW* Background::create_window() {
-  WINDOW* win = newwin(m_rows, m_cols, Frame::HEIGHT, Frame::HEIGHT);
+  WINDOW* win = newwin(m_rows, m_cols, Frame::HEIGHT, Frame::WIDTH);
 
   return win;
 }
 
-void Background::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass, const std::vector<ColorPair>& colors_pairs_stars) {
+void Background::draw(WINDOW* window, const std::vector<ColorPair>& colors_pairs_grass) {
   draw_grass(window, colors_pairs_grass);
-  draw_stars(window, colors_pairs_stars);
+  draw_stars_row(window);
   wrefresh(window);
 }
 
-void Background::draw_stars_row(WINDOW* window, int row) {
+void Background::draw_stars_row(WINDOW* window) {
+  constexpr int ROW = 0;
   int n_stars_row = m_uniform_n_stars_row(m_generator);
 
   // leave two terminal cells horizontally for each star (e.g. occupy only even positions)
@@ -55,7 +56,7 @@ void Background::draw_stars_row(WINDOW* window, int row) {
 
     int i_star = m_uniform_stars_symbols(m_generator);
     cchar_t star = m_stars[i_star];
-    mvwadd_wch(window, row, col, &star);
+    mvwadd_wch(window, ROW, col, &star);
   }
 }
 
@@ -76,19 +77,4 @@ void Background::draw_grass(WINDOW* window, const std::vector<ColorPair>& colors
       wattr_off(window, COLOR_PAIR(color_pair), NULL);
     } // END ROWS
   } // END COLS
-}
-
-void Background::draw_stars(WINDOW* window, const std::vector<ColorPair>& colors_pairs_stars) {
-  int n_colors = colors_pairs_stars.size();
-
-  // start from top for night sky (shades of gray)
-  for (int i = 0; i < n_colors; i++) {
-    int color_pair_star = colors_pairs_stars[i];
-    wattr_on(window, COLOR_PAIR(color_pair_star), NULL);
-
-    int row = i;
-    draw_stars_row(window, row);
-
-    wattr_off(window, COLOR_PAIR(color_pair_star), NULL);
-  } // END ROWS/COLORS
 }

@@ -1,4 +1,4 @@
-#include <ncurses.h>
+#include <iostream>
 
 #include "menu.hpp"
 #include "frame.hpp"
@@ -19,6 +19,15 @@ int main() {
   //////////////////////////////////////////////////
 
   auto [ rows, cols ] = NcursesUtils::init();
+
+  constexpr int MIN_HEIGHT = 2*Frame::HEIGHT + Menu::HEIGHT + Mario::HEIGHT + Background::HEIGHT_GRASS + Background::HEIGHT_STARS_ROW;
+  constexpr int MIN_WIDTH = 2*Frame::WIDTH + Mario::WIDTH;
+
+  if (rows < MIN_HEIGHT || cols < MIN_WIDTH) {
+    endwin();
+    std::cout << "Terminal not big enough" << '\n';
+    return 0;
+  }
 
 
   //////////////////////////////////////////////////
@@ -71,14 +80,6 @@ int main() {
     init_pair(greens_pairs[i], greens_indexes[i], -1);
   }
 
-  // gray gradient for stars
-  std::vector<ColorPair> grays_pairs = Colors::colors_pairs[GRAY_KEY];
-  std::vector<ColorIndex> grays_indexes = Colors::colors_indexes[GRAY_KEY];
-
-  for (size_t i = 0; i < grays_pairs.size(); ++i) {
-    init_pair(grays_pairs[i], grays_indexes[i], -1);
-  }
-
   // mario skin
   std::vector<ColorPair> mario_pairs = Colors::colors_pairs[MARIO_KEY];
   std::vector<ColorIndex> mario_indexes = Colors::colors_indexes[MARIO_KEY];
@@ -98,7 +99,7 @@ int main() {
   menu.draw_border(window_menu, red_pair);
 
   // draw grass, night sky gradients & stars
-  background.draw(window_background, greens_pairs, grays_pairs);
+  background.draw(window_background, greens_pairs);
 
   int c = 0;
   int frame_index = 0;

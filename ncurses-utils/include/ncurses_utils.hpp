@@ -2,8 +2,7 @@
 #define NCURSES_UTILS_HPP
 
 #include <utility>
-
-#include "ncurses.h"
+#include <ncurses.h>
 
 namespace NcursesUtils {
   std::pair<int, int> init();

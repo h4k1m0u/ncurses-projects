@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ctime>
-#include <ncurses.h>
 
 #include <ncurses-utils/ncurses_utils.hpp>
 #include <ncurses-utils/palette.hpp>
@@ -23,6 +22,12 @@ int main(int argc, char* argv[]) {
   //////////////////////////////////////////////////
 
   auto [ rows, cols ] = NcursesUtils::init();
+
+  if (rows < HEIGHT || cols < WIDTH) {
+    endwin();
+    std::cout << "Terminal not big enough" << '\n';
+    return 0;
+  }
 
 
   //////////////////////////////////////////////////
@@ -48,6 +53,7 @@ int main(int argc, char* argv[]) {
     Image image(path_image);
 
     if (image.n_channels != N_CHANNELS || image.width != WIDTH || image.height != HEIGHT) {
+      endwin();
       throw std::runtime_error("Invalid image (wrong size or # of channels)");
     }
 

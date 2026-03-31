@@ -12,14 +12,7 @@
 using Digits = std::array<Sprite, Constants::N_DIGITS>;
 
 class Clock {
-public:
-  Clock(int rows, int cols, const Digits& digits, const Sprite& colon);
-  WINDOW* create_window();
-  void draw(WINDOW* window, const Time::HHMMSS& time, const PairsMap& pairs_map);
-
 private:
-  int m_rows;
-  int m_cols;
   int m_x;
   int m_y;
   Digits m_digits;
@@ -30,6 +23,15 @@ private:
 
   void draw_tens_and_units(WINDOW* window, size_t i_tens, size_t i_units, bool is_minutes, const PairsMap& pairs_map);
   std::pair<unsigned int, unsigned int> get_digits_indexes(unsigned int x);
+
+public:
+  // padding between tens & units for both hours & minutes
+  static constexpr int WIDTH = N_CHARACTERS * Constants::WIDTH + 2 * PADDING;
+  static constexpr int HEIGHT = Constants::HEIGHT;
+
+  Clock(int rows, int cols, const Digits& digits, const Sprite& colon);
+  WINDOW* create_window();
+  void draw(WINDOW* window, const Time::HHMMSS& time, const PairsMap& pairs_map);
 };
 
 #endif // CLOCK_HPP
