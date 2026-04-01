@@ -1,3 +1,30 @@
+# Platforms
+Tested on:
+- Ubuntu: Konsole (KDE Plasma) & Console (Gnome).
+- Termux/Android: using [scrcpy][scrcpy]. See steps to [install scrpy][installation-scrcpy] on Linux.
+
+[scrcpy]: https://github.com/Genymobile/scrcpy/blob/master/doc/linux.md#from-an-install-script
+[installation-scrcpy]: https://github.com/Genymobile/scrcpy/blob/master/doc/linux.md#from-an-install-script
+
+# Libraries
+`stb-utils` and `ncurses-utils` (in this order) should be installed on Termux/Android by overriding the `prefix` variable as follows:
+
+```terminal
+$ pkg install binutils  # provides gar (GNU ar)
+$ cd $PREFIX/bin
+$ ln -s gar ar
+$ make prefix=$PREFIX install
+```
+
+While on linux, `prefix` is already set in the Makefile:
+
+```terminal
+$ sudo make install
+```
+
+# Prerequisites
+- ncursesw (ncurses with wide-character support to render UTF8 characters).
+
 # Documentation
 ## Packages
 These packages can be installed with `apt install` (in addition to ncurses):

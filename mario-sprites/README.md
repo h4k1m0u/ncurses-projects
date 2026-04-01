@@ -17,19 +17,8 @@ $ make -j
 $ ./build/main
 ```
 
-# Prerequisites
-- ncursesw (ncurses with wide-character support to render UTF8 characters).
-
 # Screenshot
 ![Screenshot](screenshots/screenshot.gif)
-
-# Platforms
-Tested on:
-- Ubuntu/Konsole.
-- Termux/Android: using [scrcpy][scrcpy]. See steps to [install scrpy][installation-scrcpy] on Linux.
-
-[scrcpy]: https://github.com/Genymobile/scrcpy/blob/master/doc/linux.md#from-an-install-script
-[installation-scrcpy]: https://github.com/Genymobile/scrcpy/blob/master/doc/linux.md#from-an-install-script
 
 # Sprite
 Mario: [mariouniverse.com][mario]

@@ -1,7 +1,10 @@
+# to be overriden when building on android/termux (make prefix=... target)
+# https://www.gnu.org/software/make/manual/html_node/Overriding.html
+prefix ?= /usr/local
+
 LIBRARY_NAME := stb-utils
-PREFIX := /usr/local
-INCLUDE_DEST_DIR := $(PREFIX)/include/$(LIBRARY_NAME)
-LIBRARY_DEST_DIR := $(PREFIX)/lib
+INCLUDE_DEST_DIR := $(prefix)/include/$(LIBRARY_NAME)
+LIBRARY_DEST_DIR := $(prefix)/lib
 
 SRC_DIR := src
 INCLUDE_DIR := include

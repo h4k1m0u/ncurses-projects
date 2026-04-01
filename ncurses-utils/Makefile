@@ -1,8 +1,11 @@
+# to be overriden when building on android/termux (make prefix=... target)
+# https://www.gnu.org/software/make/manual/html_node/Overriding.html
+prefix ?= /usr/local
+
 LIBRARY_NAME := ncurses-utils
-PREFIX := /usr/local
-INCLUDE_DEST_DIR := $(PREFIX)/include/$(LIBRARY_NAME)
-LIBRARY_DEST_DIR := $(PREFIX)/lib
-COLORS_DEST_DIR := $(PREFIX)/share/$(LIBRARY_NAME)
+INCLUDE_DEST_DIR := $(prefix)/include/$(LIBRARY_NAME)
+LIBRARY_DEST_DIR := $(prefix)/lib
+COLORS_DEST_DIR := $(prefix)/share/$(LIBRARY_NAME)
 
 SRC_DIR := src
 INCLUDE_DIR := include
@@ -16,7 +19,7 @@ SRC_FILES := $(shell find $(SRC_DIR) -name "*.cpp")
 OBJECTS_FILES := $(SRC_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS_FILES := $(OBJECTS_FILES:.o=.d)
 
-CPPFLAGS := -I$(INCLUDE_DIR)
+CPPFLAGS := -I$(INCLUDE_DIR) -D_XOPEN_SOURCE_EXTENDED
 CXXFLAGS := -std=c++20 -Wall -Wextra -Werror -MMD
 
 # https://gist.github.com/basharam/9511906
