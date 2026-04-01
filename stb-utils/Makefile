@@ -35,9 +35,8 @@ clean:
 
 # install & uninstall targets make it easy to link against this lib
 install:
-	mkdir -p $(INCLUDE_DEST_DIR)
-	cp -t $(INCLUDE_DEST_DIR) $(INCLUDE_DIR)/*.hpp $(INCLUDE_DIR)/*.h
-	cp -t $(LIBRARY_DEST_DIR) $(LIBRARY_FILE)
+	install -m 644 -D -t $(INCLUDE_DEST_DIR) $(INCLUDE_DIR)/*.hpp $(INCLUDE_DIR)/*.h
+	install -m 644 -t $(LIBRARY_DEST_DIR) $(LIBRARY_FILE)
 
 uninstall:
 	rm -rf $(INCLUDE_DEST_DIR)
