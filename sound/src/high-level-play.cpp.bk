@@ -1,0 +1,37 @@
+#include <iostream>
+
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
+
+/* See miniaudio/examples/engine_hello_world.c */
+int main(int argc, char* argv[]) {
+  if (argc != 2) {
+    std::cout << "USAGE: " << argv[0] << " SOUND" << '\n';
+    return 0;
+  }
+
+  ma_engine engine;
+  ma_result result;
+
+  result = ma_engine_init(NULL, &engine);
+
+  if (result != MA_SUCCESS) {
+    std::cout << "Failed to init engine - result: " << result << '\n';
+    return 1;
+  }
+
+  result = ma_engine_play_sound(&engine, argv[1], NULL);
+
+  if (result != MA_SUCCESS) {
+    std::cout << "Failed to read sound - result: " << result << '\n';
+    return 1;
+  }
+
+  // audio played in the background audio thread => program must live long enough!
+  printf("Press Enter to quit...");
+  getchar();
+
+  ma_engine_uninit(&engine);
+
+  return 0;
+}

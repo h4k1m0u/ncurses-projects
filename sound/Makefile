@@ -1,0 +1,29 @@
+# For more details about this Makefile, refer to: https://github.com/h4k1m0u/sdl-platformer/
+SRC_DIR := src
+INCLUDE_DIR := include
+BUILD_DIR := build
+
+SRC_FILES := $(shell find $(SRC_DIR) -name "*.cpp")
+OBJECTS_FILES := $(SRC_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+DEPS_FILES := $(OBJECTS_FILES:.o=.d)
+
+# link against ncursesw to support wide-characters (unicode)
+# _XOPEN_SOURCE_EXTENDED macro defined to make ncursesw functions work on termux/Android
+CPPFLAGS := -I$(INCLUDE_DIR) -D_XOPEN_SOURCE_EXTENDED
+CXXFLAGS := -std=c++20 -Wall -Wextra -Werror -MMD
+# LDFLAGS := -lncurses-utils -lstb-utils -lncursesw
+
+$(BUILD_DIR)/main: $(OBJECTS_FILES)
+	$(CXX) $^ -o$@ $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -o$@ $<
+
+$(BUILD_DIR):
+	mkdir -p $@
+
+-include $(DEPS_FILES)
+
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_DIR)

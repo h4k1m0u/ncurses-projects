@@ -1,0 +1,27 @@
+#include <ncurses-utils/symbols.hpp>
+
+#include "bar.hpp"
+
+Bar::Bar() {
+  init_cchars();
+}
+
+void Bar::init_cchars() {
+  setcchar(&m_block_full, &Symbols::FULL_WCHAR, A_NORMAL, 0, NULL);
+}
+
+/* x & y are coords of upper-left corner */
+void Bar::draw(WINDOW* window, int row_offset, int col_offset) {
+  int height = m_colors_grid.size();
+  int width = m_colors_grid.front().size();
+
+  for (int row = 0; row < height; ++row) {
+    for (int col = 0; col < width; ++col) {
+
+      int row_abs = row_offset + row;
+      int col_abs = col_offset + col;
+      mvwadd_wch(window, row_abs, col_abs, &m_block_full);
+
+    } // END COLS
+  } // END ROWS
+}

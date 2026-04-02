@@ -1,0 +1,61 @@
+#include <iostream>
+
+#include <ncurses-utils/ncurses_utils.hpp>
+
+int main(int argc, char* argv[]) {
+  if (argc <= 1) {
+    std::cout << "USAGE: " << argv[0] << " SOUND" << std::endl;
+    return 1;
+  }
+
+
+  //////////////////////////////////////////////////
+  // Init ncurses
+  //////////////////////////////////////////////////
+
+  auto [ rows, cols ] = NcursesUtils::init();
+
+
+  //////////////////////////////////////////////////
+  // window
+  //////////////////////////////////////////////////
+
+  WINDOW* window = newwin(rows, cols, 0, 0);
+
+
+  //////////////////////////////////////////////////
+  // Configure input
+  //////////////////////////////////////////////////
+
+  NcursesUtils::configure_input(window);
+
+
+  //////////////////////////////////////////////////
+  // Main loop
+  //////////////////////////////////////////////////
+
+  int c = 0;
+  bool is_quitting = false;
+  int frame_index = 0;
+
+  while (!is_quitting) {
+    // wait for key press (automatically calls refresh())
+    // wrefresh(win);
+    c = wgetch(window);
+
+    animated_sprite.draw(window, pairs_map, frame_index++);
+
+    if (c == 'q' || c == 'Q')
+      is_quitting = true;
+
+    // sleep for 50ms (cap fps at ~ 20)
+    // napms(16); // fps ~ 60
+    // napms(50);
+    napms(100); // fps = 10
+  }
+
+  delwin(window);
+  endwin();
+
+  return 0;
+}
