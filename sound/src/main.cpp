@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h"
+#include "ring_buffer.hpp"
 
 static ma_pcm_rb ring_buffer;
 
@@ -10,82 +9,6 @@ static ma_pcm_rb ring_buffer;
 static ma_event notification;
 
 int calls = 0;
-
-/* Copy `n_frames` frames from `src` to ring buffer */
-static void write_to_ring_buffer(void* src, ma_uint64 n_frames, ma_format format, ma_uint32 n_channels) {
-  ma_uint32 n_frames_written = 0;
-
-  while (n_frames_written < n_frames) {
-    ma_result result;
-
-    // retrieve a pointer to a section of the ring buffer
-    // #frames returned could be != #frames requested (e.g. clamped if #frames requested require a loop in rb) => use a loop
-    void* section_rb;
-    ma_uint32 n_frames_to_write = n_frames - n_frames_written;
-    result = ma_pcm_rb_acquire_write(&ring_buffer, &n_frames_to_write, &section_rb);
-
-    if (result != MA_SUCCESS) {
-      std::cout << "Failed to acquire write rb lock - result: " << result << std::endl;
-      return;
-    }
-
-    if (n_frames_to_write == 0)
-      break;
-
-    // copy frames to the ring buffer
-    const float* ptr_buffer_src = ma_offset_pcm_frames_const_ptr_f32((const float*) src, n_frames_written, n_channels);
-    ma_copy_pcm_frames(section_rb, ptr_buffer_src, n_frames_to_write, format, n_channels);
-
-    // update ring buffer's interior pointers
-    result = ma_pcm_rb_commit_write(&ring_buffer, n_frames_to_write);
-
-    if (result != MA_SUCCESS) {
-      std::cout << "Failed to commit writing - result: " << result << std::endl;
-      return;
-    }
-
-    n_frames_written += n_frames_to_write;
-    std::cout << "# frames written on rb: " << n_frames_to_write << std::endl;
-  } // END WHILE
-}
-
-/* Read `n_frames` frames from ring buffer into `dst` */
-static void read_from_ring_buffer(void* dst, ma_uint64 n_frames, ma_format format, ma_uint32 n_channels) {
-  ma_uint32 n_frames_read = 0;
-
-  while (n_frames_read < n_frames) {
-    ma_result result;
-
-    // retrieve a pointer to a section of the ring buffer
-    // #frames returned could be != #frames requested (e.g. clamped if #frames requested require a loop in rb) => use a loop
-    void* section_rb;
-    ma_uint32 n_frames_to_read = n_frames - n_frames_read;
-    result = ma_pcm_rb_acquire_read(&ring_buffer, &n_frames_to_read, &section_rb);
-
-    if (result != MA_SUCCESS) {
-      std::cout << "Failed to acquire read rb lock - result: " << result << std::endl;
-      return;
-    }
-
-    if (n_frames_to_read == 0)
-      break;
-
-    // copy frames to the ring buffer
-    float* ptr_buffer_dst = ma_offset_pcm_frames_ptr_f32((float *) dst, n_frames_read, n_channels);
-    ma_copy_pcm_frames(ptr_buffer_dst, section_rb, n_frames_to_read, format, n_channels);
-
-    // update ring buffer's interior pointers
-    result = ma_pcm_rb_commit_read(&ring_buffer, n_frames_to_read);
-
-    if (result != MA_SUCCESS) {
-      std::cout << "Failed to commit reading - result: " << result << std::endl;
-      return;
-    }
-
-    n_frames_read += n_frames_to_read;
-    std::cout << "# frames read from rb: " << n_frames_to_read << std::endl;
-  } // END WHILE
-}
 
 /**
  * PCM frame = frame = sample * #channels (in miniaudio)
@@ -117,7 +40,7 @@ void data_callback(ma_device* device, void* output, [[ maybe_unused ]] const voi
   /* Write frames to ring buffer */
   ma_format format = decoder->outputFormat;
   ma_uint32 n_channels = decoder->outputChannels;
-  write_to_ring_buffer(output, n_frames_decoded, format, n_channels);
+  RingBuffer::write(output, ring_buffer, n_frames_decoded, format, n_channels);
 
   // notify main thread that data was written to ring buffer (see <miniaudio>/examples/simple_mixing.c)
   ma_event_signal(&notification);
@@ -202,7 +125,7 @@ int main(int argc, char* argv[]) {
     std::cout << "# frames available (main thread): " << n_frames_available << std::endl;
 
     float* buffer = (float *) malloc(n_frames_available * sizeof(float));
-    read_from_ring_buffer(buffer, n_frames_available, format, n_channels);
+    RingBuffer::read(buffer, ring_buffer, n_frames_available, format, n_channels);
 
     // /*
     // frames (read from ring buffer) from mono sound (1 frame = 1 sample)
