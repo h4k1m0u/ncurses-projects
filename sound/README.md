@@ -18,6 +18,12 @@ Similarly, the major scale could be generated as follows:
   (osc c5 1))
 ```
 
+When exporting audio, choose:
+- Format: `Wav/Mp3`.
+- Channels `Mono/stereo`: single sample per frame or interleaved L1 R1 L2 R2... (for stereo, 1 frame = 2 samples)
+- The sample rate of `44100Hz`: Number of frames per second.
+- Encoding of `32-bit float` (i.e. samples in [-1, 1]).
+
 [nyquist]: https://www.audacity-forum.de/download/edgar/nyquist/nyquist-doc/manual/part2.html#17
 
 2. Convert it from wav/mp3 to a raw float32 binary file:

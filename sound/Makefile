@@ -11,7 +11,7 @@ DEPS_FILES := $(OBJECTS_FILES:.o=.d)
 # _XOPEN_SOURCE_EXTENDED macro defined to make ncursesw functions work on termux/Android
 CPPFLAGS := -I$(INCLUDE_DIR) -D_XOPEN_SOURCE_EXTENDED
 CXXFLAGS := -std=c++20 -Wall -Wextra -Werror -MMD
-# LDFLAGS := -lncurses-utils -lstb-utils -lncursesw
+LDFLAGS := -lncurses-utils -lncursesw
 
 $(BUILD_DIR)/main: $(OBJECTS_FILES)
 	$(CXX) $^ -o$@ $(LDFLAGS)

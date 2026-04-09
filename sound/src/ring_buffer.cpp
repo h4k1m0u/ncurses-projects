@@ -36,7 +36,7 @@ void RingBuffer::write(void* src, ma_pcm_rb& ring_buffer, ma_uint64 n_frames, ma
     }
 
     n_frames_written += n_frames_to_write;
-    std::cout << "# frames written on rb: " << n_frames_to_write << std::endl;
+    // std::cout << "# frames written on rb: " << n_frames_to_write << std::endl;
   } // END WHILE
 }
 
@@ -74,6 +74,6 @@ void RingBuffer::read(void* dst, ma_pcm_rb& ring_buffer, ma_uint64 n_frames, ma_
     }
 
     n_frames_read += n_frames_to_read;
-    std::cout << "# frames read from rb: " << n_frames_to_read << std::endl;
+    // std::cout << "# frames read from rb: " << n_frames_to_read << std::endl;
   } // END WHILE
 }
