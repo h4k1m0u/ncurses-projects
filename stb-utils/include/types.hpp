@@ -3,8 +3,6 @@
 
 #include <vector>
 
-using ColorInt = unsigned int;
-
 // row-by-row, single component per grid cell
 using ImagePixel = std::vector<unsigned char>;
 using ImageRow = std::vector<ImagePixel>;

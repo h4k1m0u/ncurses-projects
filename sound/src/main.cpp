@@ -1,16 +1,18 @@
 #include <iostream>
-#include <fstream>
+#include <vector>
 
 #include <ncurses-utils/ncurses_utils.hpp>
 
 #include "ring_buffer.hpp"
+#include "conversion.hpp"
+#include "bar.hpp"
 
 static ma_pcm_rb ring_buffer;
 
 // used to synchronize consumer (UI in main thread) with producer (audio callback)
 static ma_event notification;
 
-int calls = 0;
+// static int calls = 0;
 
 /**
  * PCM frame = frame = sample * #channels (in miniaudio)
@@ -67,13 +69,13 @@ int main(int argc, char* argv[]) {
 
   ma_format format = decoder.outputFormat;
   ma_uint32 n_channels = decoder.outputChannels;
-  std::cout << "format: " << format << std::endl;
-  std::cout << "n_channels: " << n_channels << std::endl;
+  std::cout << "Decoder format: " << format << std::endl;
+  std::cout << "Decoder n_channels: " << n_channels << std::endl;
 
   // config (send decoder via device to retrieve frames from it in callback)
   ma_device_config config = ma_device_config_init(ma_device_type_playback);
-  config.playback.format = format;
-  config.playback.channels = n_channels;
+  config.playback.format = decoder.outputFormat;
+  config.playback.channels = decoder.outputChannels;
   config.sampleRate = decoder.outputSampleRate;
   config.dataCallback = data_callback;
   config.pUserData = &decoder;
@@ -139,33 +141,50 @@ int main(int argc, char* argv[]) {
   // Main loop
   //////////////////////////////////////////////////
 
-  ////
-  // read from ring buffer (see <miniaudio>/examples/simple_mixing.c)
-  // in stereo 1 frame has 2 samples (i.e. 2 floats)
-  std::ofstream f("/tmp/sound.txt");
-
   while (true) {
     ma_event_wait(&notification);
 
+    // read samples from ring buffer (1 frame = 1 sample for mono sound)
     ma_uint32 n_frames_available = ma_pcm_rb_available_read(&ring_buffer);
-    // std::cout << "# frames available (main thread): " << n_frames_available << std::endl;
-
     float* buffer = (float *) malloc(n_frames_available * n_channels * sizeof(float));
     RingBuffer::read(buffer, ring_buffer, n_frames_available, format, n_channels);
+    int n_samples_chunk = n_frames_available * n_channels;
 
-    // /*
-    // frames (read from ring buffer) from mono sound (1 frame = 1 sample)
-    // Note: same values as in audio/a4-1s.txt
-    for (ma_uint64 i = 0; i < n_frames_available * n_channels; i++) {
-      // std::cout << "Writing frame: " << i << " sample: " << buffer[i] << '\n';
-      f << buffer[i] << std::endl;
+    // samples intensities in terms of # of window rows
+    // #rows = row_index + 1 (as latter start from zero, i.e. in [0, #rows - 1])
+    std::vector<int> rows_samples(n_samples_chunk);
+
+    for (int i = 0; i < n_samples_chunk; i++) {
+      float sample = buffer[i];
+      int row_index_sample = Conversion::sample_to_row_index(sample, rows);
+      rows_samples[i] = row_index_sample + 1;
     }
-    // */
 
-    // draw bars
-    // TODO: use Conversion
+    // find which sample is drawn at each window column
+    std::vector<int> indexes_samples_to_draw(cols);
+
+    for (int col = 0; col < cols; ++col) {
+      int index_sample = Conversion::col_to_sample_index(col, cols, n_samples_chunk);
+      indexes_samples_to_draw[col] = index_sample;
+    }
+
+    // draw a bar at each window column
+    werase(window);
+
+    for (int col = 0; col < cols; ++col) {
+      int index_sample = indexes_samples_to_draw[col];
+      int rows_sample = rows_samples[index_sample];
+      Bar bar(rows_sample, col);
+      bar.draw(window);
+    }
+
+    wrefresh(window);
 
     free(buffer);
+
+    // fps not used as the stream coming from the audio device cannot be controlled!
+    // napms(16); // fps ~ 60
+    // napms(50); // fps = 20
   }
   ////
 

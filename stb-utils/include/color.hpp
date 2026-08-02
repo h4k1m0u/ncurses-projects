@@ -13,7 +13,7 @@ struct Color {
   Color() = default;
   Color(unsigned char r, unsigned char g, unsigned char b);
   Color(ColorInt color_int);
-  Color(const std::vector<unsigned char> color);
+  Color(const std::vector<unsigned char>& color);
 
   ColorInt to_hex();
   float distance2(const Color& color_other) const;

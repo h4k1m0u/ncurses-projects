@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <stb-utils/image.hpp>
 #include <ncurses-utils/ncurses_utils.hpp>
 #include <ncurses-utils/palette.hpp>
 #include <ncurses-utils/pairs.hpp>

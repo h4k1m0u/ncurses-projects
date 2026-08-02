@@ -17,7 +17,7 @@ Color::Color(ColorInt color_int):
 {
 }
 
-Color::Color(const std::vector<unsigned char> color):
+Color::Color(const std::vector<unsigned char>& color):
   red(color[0]),
   green(color[1]),
   blue(color[2])
