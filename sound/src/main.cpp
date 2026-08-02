@@ -9,10 +9,9 @@
 
 static ma_pcm_rb ring_buffer;
 
-// used to synchronize consumer (UI in main thread) with producer (audio callback)
+// used to synchronize consumer (UI in main thread) with producer (audio callback) when samples are available to read
+// & also to notify main thread when all audio frames have been read (i.e. EOF reached)
 static ma_event notification;
-
-// static int calls = 0;
 
 /**
  * PCM frame = frame = sample * #channels (in miniaudio)
@@ -23,12 +22,11 @@ void data_callback(ma_device* device, void* output, [[ maybe_unused ]] const voi
   ma_uint64 n_frames_decoded;
   ma_decoder_read_pcm_frames(decoder, output, n_frames, &n_frames_decoded);
 
-  // std::cout << "- # frames decoded (audio callback): " << n_frames_decoded << " call: " << ++calls << std::endl;
-
   // all audio frames were read
-  // TODO: signal event to main loop as we cannot stop inside audio callback (see <miniaudio>/examples/simple_mixing.c)
-  if (n_frames_decoded == 0)
+  if (n_frames_decoded == 0) {
+    ma_event_signal(&notification);
     return;
+  }
 
   /* Write frames to ring buffer */
   ma_format format = decoder->outputFormat;
@@ -53,12 +51,11 @@ int main(int argc, char* argv[]) {
 
 
   //////////////////////////////////////////////////
-  // Read sound file
+  // Read sound file & init miniaudio objects
   //////////////////////////////////////////////////
 
-  ma_result result;
-
   // decoder (to read audio file)
+  ma_result result;
   ma_decoder decoder;
   result = ma_decoder_init_file(path_sound, NULL, &decoder);
 
@@ -80,7 +77,7 @@ int main(int argc, char* argv[]) {
   config.dataCallback = data_callback;
   config.pUserData = &decoder;
 
-  // device
+  // init device (i.e. audio card)
   ma_device device;
   result = ma_device_init(NULL, &config, &device);
 
@@ -103,7 +100,7 @@ int main(int argc, char* argv[]) {
   }
 
   // notification used to communicate between audio & main thread
-  ma_event_init(&notification);
+  result = ma_event_init(&notification);
 
   if (result != MA_SUCCESS) {
     std::cout << "Failed to init notification - result: " << result << '\n';
@@ -142,31 +139,26 @@ int main(int argc, char* argv[]) {
   //////////////////////////////////////////////////
 
   while (true) {
+    // wait for key press (automatically calls refresh())
+    int c = wgetch(window);
+    if (c == 'q' || c == 'Q')
+      break;
+
     ma_event_wait(&notification);
 
-    // read samples from ring buffer (1 frame = 1 sample for mono sound)
+    // all audio frames were read
     ma_uint32 n_frames_available = ma_pcm_rb_available_read(&ring_buffer);
-    float* buffer = (float *) malloc(n_frames_available * n_channels * sizeof(float));
-    RingBuffer::read(buffer, ring_buffer, n_frames_available, format, n_channels);
+    if (n_frames_available == 0)
+      break;
+
+    // read samples chunk from ring buffer (1 frame = 1 sample for mono sound)
     int n_samples_chunk = n_frames_available * n_channels;
+    std::vector<float> samples_chunk(n_samples_chunk);
+    RingBuffer::read(samples_chunk.data(), ring_buffer, n_frames_available, format, n_channels);
 
-    // samples intensities in terms of # of window rows
-    // #rows = row_index + 1 (as latter start from zero, i.e. in [0, #rows - 1])
-    std::vector<int> rows_samples(n_samples_chunk);
-
-    for (int i = 0; i < n_samples_chunk; i++) {
-      float sample = buffer[i];
-      int row_index_sample = Conversion::sample_to_row_index(sample, rows);
-      rows_samples[i] = row_index_sample + 1;
-    }
-
-    // find which sample is drawn at each window column
-    std::vector<int> indexes_samples_to_draw(cols);
-
-    for (int col = 0; col < cols; ++col) {
-      int index_sample = Conversion::col_to_sample_index(col, cols, n_samples_chunk);
-      indexes_samples_to_draw[col] = index_sample;
-    }
+    // samples intensities in terms of # of window rows & match each column with a chosen sample
+    std::vector<int> rows_samples = Conversion::get_rows_samples(samples_chunk, rows);
+    std::vector<int> indexes_samples_to_draw = Conversion::get_indexes_samples_by_col(n_samples_chunk, cols);
 
     // draw a bar at each window column
     werase(window);
@@ -178,30 +170,22 @@ int main(int argc, char* argv[]) {
       bar.draw(window);
     }
 
-    wrefresh(window);
-
-    free(buffer);
-
-    // fps not used as the stream coming from the audio device cannot be controlled!
+    // fps not used as the throughput of the stream coming from the audio device cannot be controlled!
     // napms(16); // fps ~ 60
-    // napms(50); // fps = 20
-  }
-  ////
+  } // END MAIN LOOP
 
 
-  // TODO: signal event from audio callback to stop device (when stream has all been read)
+  //////////////////////////////////////////////////
+  // Free resources
+  //////////////////////////////////////////////////
 
-  // audio played in the background audio thread => program must live long enough!
-  // printf("Press Enter to quit...");
-  getchar();
+  delwin(window);
+  endwin();
 
   ma_event_uninit(&notification);
   ma_pcm_rb_uninit(&ring_buffer);
   ma_device_uninit(&device);
   ma_decoder_uninit(&decoder);
-
-  delwin(window);
-  endwin();
 
   return 0;
 }
