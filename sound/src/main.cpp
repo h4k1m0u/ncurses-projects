@@ -4,8 +4,7 @@
 #include <ncurses-utils/ncurses_utils.hpp>
 
 #include "ring_buffer.hpp"
-#include "conversion.hpp"
-#include "bar.hpp"
+#include "drawer_bars.hpp"
 
 static ma_pcm_rb ring_buffer;
 
@@ -66,8 +65,6 @@ int main(int argc, char* argv[]) {
 
   ma_format format = decoder.outputFormat;
   ma_uint32 n_channels = decoder.outputChannels;
-  std::cout << "Decoder format: " << format << std::endl;
-  std::cout << "Decoder n_channels: " << n_channels << std::endl;
 
   // config (send decoder via device to retrieve frames from it in callback)
   ma_device_config config = ma_device_config_init(ma_device_type_playback);
@@ -127,16 +124,17 @@ int main(int argc, char* argv[]) {
   // Init ncurses
   //////////////////////////////////////////////////
 
-  auto [ rows, cols ] = NcursesUtils::init();
+  std::pair<int, int> size_window = NcursesUtils::init();
+  auto [ rows, cols ] = size_window;
   WINDOW* window = newwin(rows, cols, 0, 0);
   NcursesUtils::configure_input(window);
-  std::cout << "rows: " << rows << std::endl;
-  std::cout << "cols: " << cols << std::endl;
 
 
   //////////////////////////////////////////////////
   // Main loop
   //////////////////////////////////////////////////
+
+  bool is_stereo = n_channels == 2;
 
   while (true) {
     // wait for key press (automatically calls refresh())
@@ -156,18 +154,14 @@ int main(int argc, char* argv[]) {
     std::vector<float> samples_chunk(n_samples_chunk);
     RingBuffer::read(samples_chunk.data(), ring_buffer, n_frames_available, format, n_channels);
 
-    // samples intensities in terms of # of window rows & match each column with a chosen sample
-    std::vector<int> rows_samples = Conversion::get_rows_samples(samples_chunk, rows);
-    std::vector<int> indexes_samples_to_draw = Conversion::get_indexes_samples_by_col(n_samples_chunk, cols);
-
-    // draw a bar at each window column
+    // draw mirrored bars (for each channel) for stereo & single mirroed bar for mono
     werase(window);
 
-    for (int col = 0; col < cols; ++col) {
-      int index_sample = indexes_samples_to_draw[col];
-      int rows_sample = rows_samples[index_sample];
-      Bar bar(rows_sample, col);
-      bar.draw(window);
+    if (is_stereo) {
+      DrawerBar::draw_stereo(samples_chunk, window, size_window);;
+    }
+    else {
+      DrawerBar::draw_mono(samples_chunk, window, size_window);;
     }
 
     // fps not used as the throughput of the stream coming from the audio device cannot be controlled!
@@ -186,6 +180,11 @@ int main(int argc, char* argv[]) {
   ma_pcm_rb_uninit(&ring_buffer);
   ma_device_uninit(&device);
   ma_decoder_uninit(&decoder);
+
+  std::cout << "Decoder format: " << format << std::endl;
+  std::cout << "Decoder n_channels: " << n_channels << std::endl;
+  std::cout << "rows: " << rows << std::endl;
+  std::cout << "cols: " << cols << std::endl;
 
   return 0;
 }

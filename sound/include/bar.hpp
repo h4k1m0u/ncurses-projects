@@ -9,15 +9,12 @@
  */
 class Bar {
 public:
-  Bar(int rows, int col);
-  void draw(WINDOW* window);
+  Bar(int col);
+  void draw(WINDOW* window, int row0, int rows, bool reversed);
 
 private:
   /* cchar_t used to hold C wide-characters for n-curses (unicode constants like emojis stored in wchar_t) */
   cchar_t m_block_full;
-
-  /* # of rows where a box is drawn, starting from row=0 */
-  int m_rows;
 
   /* Column where to draw vertical boxes */
   int m_col;
