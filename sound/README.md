@@ -1,3 +1,40 @@
+# Description
+Audio visualizer using vertical bars rendered on the terminal.
+
+Supports mono & stereo tracks in mp3 & wave formats.
+
+# How to build & run
+First build & install stb-utils:
+
+```terminal
+$ cd ../stb-utils
+$ make -j
+$ sudo make install
+```
+
+Then, build & install ncurses-utils:
+
+```terminal
+$ cd ../ncurses-utils
+$ make -j
+$ sudo make install
+```
+
+Then build the current repo:
+
+```terminal
+$ make -j
+$ ./build/main <SOUND.MP3/WAV>
+```
+
+# Prerequisites
+- ncursesw (ncurses with wide-character support to render UTF8 characters).
+- Miniaudio: reads audio frames by chunk.
+
+# Screenshot
+![Screenshot](screenshots/screenshot.gif)
+
+# Notions
 1. Audio files (duration=1s below) are generated in Nyquist (from within Audacity), as suggested in [Audacity docs][nyquist]. In Audacity's menu, go to Tools > Nyquist Prompt and apply the following:
 ```lisp
 (osc a4 1)
