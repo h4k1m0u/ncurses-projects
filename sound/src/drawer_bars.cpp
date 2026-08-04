@@ -16,7 +16,7 @@ void DrawerBar::draw_mono(const Samples& samples, WINDOW* window, const SizeWind
   for (int col = 0; col < cols; ++col) {
     int index_sample = indexes_samples_to_draw[col];
     int rows_sample = rows_samples[index_sample];
-    Bar bar(col);
+    Bar bar(col, rows);
     // bar.draw(window, 0, rows_sample, false);
     bar.draw(window, rows - 1, rows_sample, true);
   }
@@ -51,8 +51,8 @@ void DrawerBar::draw_stereo(const Samples& samples, WINDOW* window, const SizeWi
     int rows_sample_left = rows_samples_left[index_sample];
     int rows_sample_right = rows_samples_right[index_sample];
 
-    Bar bar_left(col);
-    Bar bar_right(col);
+    Bar bar_left(col, rows_half);
+    Bar bar_right(col, rows_half);
 
     bar_left.draw(window, rows_half - 1, rows_sample_left, true);
     bar_left.draw(window, rows_half, rows_sample_right, false);
